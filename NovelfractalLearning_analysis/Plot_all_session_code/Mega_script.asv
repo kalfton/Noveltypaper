@@ -2,11 +2,23 @@ clear all; clc; warning off; beep off; close all;
 addpath('./help_func');
 addpath('./utils');
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-profile on;
+DDD = [];
+%Slayer
+filepath = 'Y:\PLEXON_GRAYARRAY_Slayer\NovelFractalLearning_Slayer_combinedsorting';
+DDD = dir(fullfile(filepath,'*tasksession_mega_file.mat'));
+%Lemmy
+filepath = 'Y:\PLEXON_GRAYARRAY_LEMMY\NovelfractalLearning_Lemmy_combinedsorting';
+DDD = [DDD;dir(fullfile(filepath,'*tasksession_mega_file.mat'))];
+
+baselinesubtraction = 'None';
+
 plotpath = './plots';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 exclude_mua = true;
 shuffling_num = 1000; % the shuffling number is set to 1000 to reduce the running time, it is originally set as 10000
+%sz = 40;
 StatisticalThreshold=0.01;
 
 % load data:
@@ -19,7 +31,7 @@ clear Neuronlist_Slayer Neuronlist_Lemmy
 
 
 clear indices
-% grab the key indices for hypotheses testing
+%lets grab the key indices for hypotheses testing
 indices.pred_nov_vs_fam = [Neuronlist_good(:).pred_nov_vs_fam]';
 indices.pred_vs_unpred_fam=[Neuronlist_good(:).pred_vs_unpred_fam]';
 indices.violation_ind=[Neuronlist_good(:).violation_ind]';
@@ -27,7 +39,7 @@ indices.recency_ind=[Neuronlist_good(:).recency_ind_match_pos]';
 indices.rewardvalueindex = [Neuronlist_good(:).rewardvalueindex_precue]';
 indices.RewInfoAnticipIndex = [Neuronlist_good(:).RewInfoAnticipIndex_split]';
 
-% grab the key indices p values
+%lets grab the key indices p values
 
 indices.Ppred_nov_vs_fam = [Neuronlist_good(:).P_pred_nov_vs_fam]';
 indices.Ppred_vs_unpred_fam=[Neuronlist_good(:).P_pred_vs_unpred_fam_perm]';
@@ -63,7 +75,7 @@ indices.PRewInfoAnticipIndex = [Neuronlist_good(:).RewInfoAnticipIndexP_split]';
 % indices.Precency_ind_even=[Neuronlist_even(:).P_recency_ind_match_pos]';
 
 %%
-
+profile on;
 addpath('./population_analyses');
 
 % Bar plot figure

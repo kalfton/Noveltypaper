@@ -1,8 +1,6 @@
-fig1 = figure();
 %shuffling_num = 10000;
 axislabel_for_plot = {'Surprise', 'Recency', 'Violation','Novelty','Reward value', 'Infoanticip'};
 
-% see script in Y:\Kaining\Infonew_analysis\index_infonew_code_testing
 indices_for_plot = {'pred_vs_unpred_fam','recency_ind_match_pos','violation_ind', 'pred_nov_vs_fam',...
     'rewardvalueindex_precue', 'RewInfoAnticipIndex_split'};
 P_value_for_plot = {'P_pred_vs_unpred_fam_perm', 'P_recency_ind_match_pos','P_violation_ind_perm', 'P_pred_nov_vs_fam',...

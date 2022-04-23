@@ -10,7 +10,8 @@ DDD = [DDD; dir(fullfile(datapath,'*tasksession_mega_file.mat'))];
 
 %plotpath = '.\plots';
 
-generate_new_data = false; %true or false
+generate_new_data = false; %true or false, if set to true, original data is needed.
+
 tic
 if generate_new_data
     fixation_obj = fixation_session();

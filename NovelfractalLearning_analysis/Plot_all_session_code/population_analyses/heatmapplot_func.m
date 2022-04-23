@@ -1,16 +1,19 @@
-function heatmapplot_func(indices, plotpath, plotname)
+function heatmapplot_func(indices, plotpath, plotname, shuffling_num)
 StatisticalThreshold = 0.01;
+if ~exist('shuffling_num', 'var')
+    shuffling_num = 10000;
+end
+
+default_plotname = {'Indices_heatmap_all_session.pdf';
+        'Indices_binned_errorbar_all_session.pdf';};
+if numel(plotname)<2
+    plotname(numel(plotname)+1:2) = default_plotname(numel(plotname)+1:2);
+end
+
 NovelExcited=find([indices.pred_nov_vs_fam]>0 & [indices.Ppred_nov_vs_fam]<=StatisticalThreshold)';
 NovelInhibited=find([indices.pred_nov_vs_fam]<0 & [indices.Ppred_nov_vs_fam]<=StatisticalThreshold)';
 NotNoveltySelective=find([[indices.Ppred_nov_vs_fam]>=StatisticalThreshold])';
 NoveltySelective=find([[indices.Ppred_nov_vs_fam]<StatisticalThreshold])';
-
-default_plotname = {'Indices_heatmap_all_session.pdf';
-        'Indices_binned_errorbar_all_session.pdf';
-        'recency_surprise_oddratio_test.pdf'};
-if numel(plotname)<3
-    plotname(numel(plotname)+1:3) = default_plotname(numel(plotname)+1:3);
-end
 
 fig1 = figure;
 fig2 = figure;
@@ -23,13 +26,11 @@ flip_nov_sign = 1;
 % Pvalues_for_plot = {'Ppred_vs_unpred_fam','Precency_ind','Pviolation_ind'};
 
 %% A simplified version just for the figure plots.
-permutexy = {[4,1],[4,2],[4,3], [1,2]}; %[4,5],[4,6],[4,7],[2,3],[1,3],[1,2], [4,8]
+permutexy = {[4,1],[4,2],[4,3], [1,2]}; 
 
 plotplacesetx = {51:85,91:125,131:165,51:85,91:125,131:165,51:85,91:125,131:165, 11:45, 11:45, 11:45};
 plotplacesety = {1:49, 1:49, 1:49, 61:109, 61:109, 61:109, 121:169,121:169,121:169, 61:109, 121:169, 1:49};
-% barcolor = {'b','r','g'};
-% Xedges = -0.5:0.05:0.5;
-% Yedges = -0.5:0.05:0.5;
+
 
 Include_criterion = 'noveltyexcited';% 'noveltyinhibited', 'noveltyselective', 'All'
 
@@ -52,8 +53,6 @@ NovelExcited_local = ismember(Include_neurons, NovelExcited);
 NovelInhibited_local = ismember(Include_neurons, NovelInhibited);
 
 for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
-%     eval(['xaxis_ind = ' indices_for_plot{permutexy{xyw}(1)} ';']);
-%     eval(['yaxis_ind = ' indices_for_plot{permutexy{xyw}(2)} ';']);
     
     xaxis_ind = indices.(indices_for_plot{permutexy{xyw}(1)});
     yaxis_ind = indices.(indices_for_plot{permutexy{xyw}(2)});
@@ -72,7 +71,7 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     yaxis_label = axislabel_for_plot{permutexy{xyw}(2)};
     
     figure(fig1);
-    nsubplot(169,169, plotplacesety{xyw}, plotplacesetx{xyw}); set(gca,'ticklength',4*get(gca,'ticklength'))
+    nsubplot(169,169, plotplacesety{xyw}, plotplacesetx{xyw}); set(gca,'ticklength',4*get(gca,'ticklength'));
     
     
     %% All neurons
@@ -81,9 +80,6 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     binedge = linspace(lim(1),lim(2),nbin+1);
     binmid = 0.5*binedge(1:(end-1)) + 0.5*binedge(2:end);
     
-    %for xyx = 1 %1: non-novelty, 2: novelty excited, 3: novelty inhibited
-    %eval(['currentindset = ' Indvariablenames{xyx} ';']);
-    %histogram2(xaxis_ind(currentindset),yaxis_ind(currentindset), Xedges,  Yedges,'facecolor','flat');
     [n,xedge,yedge] = histcounts2(xaxis_ind,yaxis_ind,binedge,binedge);
     
     n = n'; % transpose so that x=columns and y=rows
@@ -95,7 +91,6 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     n(n==-inf)=minimum_n-0.5;
     colormap(flipud(gray));
     %figuren;
-    %image(binmid,binmid,colormapify(n,[0 max(n(:))],'w',interpcolor('w','k',.5),'k','w'));
     imagesc(binmid,binmid,n);
     n_contour_levels = 6;
     contour(binmid,binmid,n,n_contour_levels,'linewidth',3);
@@ -113,9 +108,6 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     notnanlogic = ~isnan(xaxis_ind) & ~isnan(yaxis_ind);
     
     
-%     [slope,yint] = type_2_regression(xaxis_ind(notnanlogic), yaxis_ind(notnanlogic));
-%     line([-.5 .5], yint+slope.*[-0.5,0.5],'color','r','LineWidth',1);
-%     %[rho,rhop] = corr(x,y,'type','Spearman');
 %     
     % All datapoint value
     [rho,p] = corr(yaxis_ind(notnanlogic) , xaxis_ind(notnanlogic), 'Type', 'Spearman');
@@ -136,7 +128,6 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     catch
     end
 %     %non-related novelty neuron
-%     [rho_nirl,p_nirl] = corr(yaxis_ind(NotNoveltySelective_local) , xaxis_ind(NotNoveltySelective_local), 'Type', 'Spearman');
     text(0.2,0.2, ['n = ' mat2str(sum(notnanlogic))])
     axis square
     % title says the criterion
@@ -148,7 +139,6 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     figure(fig2);
     nsubplot(169,169, plotplacesety{xyw}, plotplacesetx{xyw}); set(gca,'ticklength',4*get(gca,'ticklength'));
     bins = linspace(0,1,4);%-0.5:0.2:0.5;
-    %bins = linspace(-0.5,0.5,8);
     bins(1) = bins(1)-0.001;% to include the left edge
     bins(end) = bins(end)+0.001;% to include the right edge
     xdata = zeros([1,length(bins)-1]);
@@ -181,28 +171,9 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     
     % linear fitting
     b = [ones(sum(notnanlogic),1),xaxis_ind(notnanlogic)]\[yaxis_ind(notnanlogic)];
-    %objfit = fit(xaxis_ind(notnanlogic), yaxis_ind(notnanlogic), 'poly1');
-    %b = [objfit.p2, objfit.p1];
-    %     if strcmpi(Include_criterion, 'noveltyexcited')
-    %         x_plot=0:0.1:0.5;
-    %     elseif strcmpi(Include_criterion, 'noveltyinhibited')
-    %         x_plot=-0.5:0.1:0;
-    %     elseif strcmpi(Include_criterion, 'noveltyselective')
-    %         x_plot=-0.5:0.1:0.5;
-    %     else
-    %         x_plot=0:0.1:0.5;
-    %     end
     x_plot=0:0.1:1;
     plot(x_plot, b(1)+b(2)*x_plot, 'r');
     
-    %     text(0.2,0.15, ['p remain ' mat2str(p_nirl,4)])
-    %     text(0.2,0.2, ['rho remain ' mat2str(rho_nirl,4)])
-    %     if strcmpi(indices_for_plot{permutexy{xyw}(1)}, 'pred_nov_vs_fam')
-    %         xlim([0, 0.5]);
-    %     end
-    %     if strcmpi(indices_for_plot{permutexy{xyw}(2)}, 'pred_nov_vs_fam')
-    %         ylim([0, 0.5]);
-    %     end
     if strcmpi(Include_criterion, 'noveltyexcited')
         ylim([-0.08,0.08]*2);
     elseif strcmpi(Include_criterion, 'noveltyinhibited')
@@ -244,7 +215,6 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     catch
     end
 %     %non-related novelty neuron
-%     [rho_nirl,p_nirl] = corr(yaxis_ind(NotNoveltySelective_local) , xaxis_ind(NotNoveltySelective_local), 'Type', 'Spearman');
     text(0.4,-0.08*(7/5), ['n = ' mat2str(sum(notnanlogic))])
     
     %axis square
@@ -260,7 +230,6 @@ end
 
 %% plot corr(sensory surprise & recency) vs novelty index
 if ~strcmpi(Include_criterion, 'All')
-shuffling_num = 10000;
 
 % compare whether two corr is significantly different
 figure(fig2);
@@ -303,14 +272,15 @@ end
 ylim([-1 ytext]);
 end
 
-% 
-% % save the plot
-% figure(fig1);
-% set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
-% 
-% % save the plot
-% figure(fig2);
-% set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
 
+% save the plot
+figure(fig1);
+set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
+print(gcf,'-dpdf', '-painters',fullfile(plotpath,plotname{1}));
+
+% save the plot
+figure(fig2);
+set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
+print(gcf,'-dpdf', '-painters',fullfile(plotpath,plotname{2}));
 
 end

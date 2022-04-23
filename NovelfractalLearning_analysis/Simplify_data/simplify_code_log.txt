@@ -1,0 +1,5 @@
+One way to adapt segment path/or etc so that they can plot together and separately:
+use:
+if exist(*,  'var')
+
+end

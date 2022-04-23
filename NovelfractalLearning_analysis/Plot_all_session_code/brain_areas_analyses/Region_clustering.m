@@ -1,5 +1,5 @@
 %% This script is for inter-region comparison
-directories.resultsDir = plotpath;
+
 monkeyNames = ["Lemmy","Slayer","Combined"];
 
 pars.sigThres = 0.01;
@@ -40,32 +40,24 @@ correlation_legend = {'Novelty & Surprise', 'Novelty & Recency', 'Novelty & viol
 pars.correlation_color = {'b','g',[0.8,0.2,0.8]};
 minmum_num = 10; % if an area has neuron number less than this, exclude it.
 
-
 %%
-try
-    datastruct = Neuronlist_all;
-catch
-    datastruct = Neuronlist_good;
-end
-
 switch monkeyName
     case 'Lemmy'
-        tempIndices = find([datastruct.MonkeyID]== 2);
-        datastruct = datastruct(tempIndices);
+        tempIndices = find([Neuronlist_good.MonkeyID]== 2);
+        Neuronlist_good = Neuronlist_good(tempIndices);
     case 'Slayer'
-        tempIndices = find([datastruct.MonkeyID]== 1);
-        datastruct = datastruct(tempIndices);
+        tempIndices = find([Neuronlist_good.MonkeyID]== 1);
+        Neuronlist_good = Neuronlist_good(tempIndices);
     case 'Combined'
         
 end
 
-%clear Neuronlist_all;
 experimentConditions = pars.experimentConditions;
 StatisticalThreshold = pars.StatisticalThreshold;
 
 
 %% count the percentage of neurons and raw numbers in each brain area.
-[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, datastruct, pars);
+[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_good, pars);
 segmentNames = segmentmap(:,1);
 %%
 allRegionsCells = neuron_counts.allRegionsCells;
@@ -153,7 +145,7 @@ axis off;
 
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
-print(gcf,'-dpdf', '-painters',fullfile(directories.resultsDir, ['brain_area_pairwise_comparison_matrices_new' '.pdf']));
+print(gcf,'-dpdf', '-painters',fullfile(plotpath, ['brain_area_pairwise_comparison_matrices_new' '.pdf']));
 
 %% Cluster the regions by the percentage of neurons.
 conditionnames = fieldnames(significantPerc.selective);
@@ -164,14 +156,14 @@ for condind = 1:numel(conditionnames)
 end
 
 %% save the novelty/sensory surprise/recency indice of each neuron by brain areas
-cells_areas = [datastruct.(pars.anatomyCase)];
+cells_areas = [Neuronlist_good.(pars.anatomyCase)];
 areas_indices = cell(numel(segmentNames),1);
 areas_indices_mean = zeros(numel(segmentNames),3);
 for segmentInd = 1:numel(segmentNames)
     currentCells = ismember(cells_areas, segmentmap{segmentInd,2});
     for jj = 1:3 %novelty/sensory surprise/recency
-        areas_indices{segmentInd}(:,end+1) = abs([datastruct(currentCells).(pars.experimentindices{jj})]);
-        areas_indices_mean(segmentInd, jj) = mean(abs([datastruct(currentCells).(pars.experimentindices{jj})]));
+        areas_indices{segmentInd}(:,end+1) = abs([Neuronlist_good(currentCells).(pars.experimentindices{jj})]);
+        areas_indices_mean(segmentInd, jj) = mean(abs([Neuronlist_good(currentCells).(pars.experimentindices{jj})]));
     end
     clear currentCells;
 end
@@ -270,7 +262,7 @@ set(gca,'Ytick', [0:0.2:1]);
 
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);
-print(gcf,'-dpdf', '-painters',fullfile(directories.resultsDir, ['brain_area_normalized_ROC' '.pdf']));
+print(gcf,'-dpdf', '-painters',fullfile(plotpath, ['brain_area_normalized_ROC' '.pdf']));
 
 
 

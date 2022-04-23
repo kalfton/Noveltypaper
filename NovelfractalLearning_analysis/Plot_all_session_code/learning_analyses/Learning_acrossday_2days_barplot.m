@@ -53,7 +53,7 @@ for i = 1:length(variablenames)
     
     
     set(gca, 'xtick', [1,2], 'xticklabel', {'Begin', 'End'});
-    title([variablenames{i} 'Fractal']);
+    title([variablenames{i} 'Fractal'], 'interpreter', 'none');
     xlim([0.5,2.5]);
     ylim([-1,1]);
     ylabel('zscored firing rate');
@@ -68,7 +68,7 @@ for i = 1:length(variablenames)
         Datamean = [nanmean(All_ROC_start), nanmean(All_ROC_end)];
         Datastd = [nanstd(All_ROC_start)/sqrt(length(All_ROC_start)), nanstd(All_ROC_end)/sqrt(length(All_ROC_end))];
         [p_paired, ~] = signrank(All_ROC_start-All_ROC_end);
-        title([variablenames{i} 'Fractal, p = ' mat2str(p_paired,3)]);
+        title([variablenames{i} 'Fractal, p = ' mat2str(p_paired,3)], 'interpreter', 'none');
         
         if contains(variablenames{i},'Learning_Novel')
             Learning_Novel_Datamean = Datamean;

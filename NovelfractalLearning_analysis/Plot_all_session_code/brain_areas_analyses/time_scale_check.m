@@ -1,6 +1,4 @@
 %% This is for plotting the bar plots in the main figure.
-directories.resultsDir = plotpath;
-
 clear pars
 pars.sigThres = 0.01;
 pars.tableColor_low = 0.001;
@@ -25,20 +23,14 @@ pars.celltype = {'positive', 'negative','selective'};
 
 monkeyName = 'Combined'; % 'Slayer','Lemmy'
 
-
-try
-    datastruct = Neuronlist_all;
-catch
-    datastruct = Neuronlist_good;
-end
-
+%%
 switch monkeyName
     case 'Lemmy'
-        tempIndices = find([datastruct.MonkeyID]== 2);
-        datastruct = datastruct(tempIndices);
+        tempIndices = find([Neuronlist_good.MonkeyID]== 2);
+        Neuronlist_good = Neuronlist_good(tempIndices);
     case 'Slayer'
-        tempIndices = find([datastruct.MonkeyID]== 1);
-        datastruct = datastruct(tempIndices);
+        tempIndices = find([Neuronlist_good.MonkeyID]== 1);
+        Neuronlist_good = Neuronlist_good(tempIndices);
     case 'Combined'
         
 end
@@ -50,7 +42,7 @@ included_Ind = [Neuronlist_good.intrinsic_time]<5000 & [Neuronlist_good.intrinsi
 %% Ploting start here.
 
 %% count the percentage of neurons and raw numbers in each brain area.
-[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, datastruct, pars);
+[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_good, pars);
 segmentNames = segmentmap(:,1);
 %%
 allRegionsCells = neuron_counts.allRegionsCells;
@@ -60,8 +52,8 @@ pouts = neuron_counts.pouts;
 
 
 % calculate the mean/std of timescale in each brain area
-timescale = [datastruct(included_Ind).intrinsic_time];
-cells_areas = [datastruct(included_Ind).(pars.anatomyCase)];
+timescale = [Neuronlist_good(included_Ind).intrinsic_time];
+cells_areas = [Neuronlist_good(included_Ind).(pars.anatomyCase)];
 timescalemean = zeros(numel(segmentNames),1);
 timescalestd = zeros(numel(segmentNames),1);
 
@@ -110,7 +102,7 @@ yticks(1:numel(segmentNames));
 set(gca,'Ytick', barposition, 'YtickLabel',segmentNames,'FontAngle','italic');
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);
-name2save_pdf = fullfile(directories.resultsDir,['timescale by brain area.pdf']);
+name2save_pdf = fullfile(plotpath,['timescale by brain area.pdf']);
 print(name2save_pdf,'-dpdf');
 
 

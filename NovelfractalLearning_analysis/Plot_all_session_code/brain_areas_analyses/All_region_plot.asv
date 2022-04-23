@@ -38,7 +38,12 @@ correlation_legend = {'Novelty & Surprise', 'Novelty & Recency', 'Novelty & viol
 pars.correlation_color = {'b','g',[0.8,0.2,0.8]};
 minmum_num = 10; % if an area has neuron number less than this, exclude it.
 
-%%
+
+%% Load all Neuronlistfile
+
+datastruct = Neuronlist_good;
+
+
 switch monkeyName
     case 'Lemmy'
         tempIndices = find([Neuronlist_good.MonkeyID]== 2);
@@ -50,9 +55,11 @@ switch monkeyName
         
 end
 
+
+%clear Neuronlist_all;
 %% Ploting start here.
 experimentConditions = pars.experimentConditions;
-% load(fullfile('./brain_areas_analyses/segments','segmentmap.mat'));% load segmentNames
+% load(fullfile(directories.variableDir,'segmentmap.mat'));% load segmentNames
 
 %% count the percentage of neurons and raw numbers in each brain area.
 [neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_good, pars);
@@ -64,7 +71,8 @@ significantPerc = neuron_counts.significantPerc;
 pouts = neuron_counts.pouts;
 
 
-% sort the area by percentage of novelty selective neurons
+% sort the area by percentage of selective neuron/either positive or
+% negative
 [~,order] = sort([significantPerc.selective(1:end).P_pred_nov_vs_fam]);
 %order = [numel(order),order]; % the first one should be alway not assigned.
 allRegionsCells = allRegionsCells(order,1);

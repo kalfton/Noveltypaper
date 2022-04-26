@@ -91,7 +91,7 @@ Rasterscs_f=Hist_raster_f;
 close all;
 figure;
 % basic infomation
-nsubplot(169,169, (5:45),100+(5:45));
+nsubplot(2,2, 1,2);
 text(0,1, ['Region ' sampleneuron.region]);
 text(0,2,sampleneuron.filename,'interpreter', 'none');
 text(0,3,['Depth ' mat2str(sampleneuron.electrodeDepth,3)]);
@@ -151,7 +151,7 @@ end
 binsize = 5;
 binstep = 1;
 x_data = floor(binsize/2)+(1:maxappearance_time-binsize+1);
-nsubplot(169,169, (5:45),(5:45));
+nsubplot(2,2, 1,1);
 n = numel(sampleneuron.learning.FR7999);
 n = min([n,maxappearance_time]);
 %pl1 = plot(x_data(1:n), smooth(zscorestd*sampleneuron.learning.FR7999(1:n)+zscoremean, 5), 'r');
@@ -232,7 +232,7 @@ y_limit = [5, 40];
 ylim(y_limit);
 
 %ploting
-nsubplot(169,169, 100+(5:45), (5:45));
+nsubplot(2,2,2,1);
 n_sample = 5;
 
 trialind_start = [];
@@ -300,7 +300,7 @@ pos(2) = pos(2)-0.15;
 set(lg, 'position', pos);
 
 %% statistics:
-nsubplot(169,169, 100+(5:45),100+(5:45));
+nsubplot(2,2,2,2);
 
 p = ranksum(FR_familiar, FR_2day_end);
 text(0,4,sprintf('Familiar vs 2 day end learning, p = %.5f', p));

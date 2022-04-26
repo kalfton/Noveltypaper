@@ -46,7 +46,7 @@ classdef fixation_session < handle
             end
             % reaction time
             figure;
-            nsubplot(169,169, 1:70, 1:70);
+            nsubplot(2,2,1,1);
             Datamean = mean(obj.reactiontime_types,2);
             Datastd = std(obj.reactiontime_types,[],2)/sqrt(size(obj.reactiontime_types,2));
             bar([1,2,3,4],Datamean, 'b'); hold on;
@@ -63,7 +63,7 @@ classdef fixation_session < handle
             set(gca, 'xtick', [1,2,3,4])
             title(['Reaction time to Fixation(session by session)']);
             
-            nsubplot(169,169, 81:150, 1:70);
+            nsubplot(2,2,1,2);
             Datamean = cellfun(@(x) mean(x),obj.reactiontime_singletrials);
             Datastd = cellfun(@(x) std(x)/sqrt(numel(x)),obj.reactiontime_singletrials);
             bar([1,2,3,4],Datamean, 'b'); hold on;

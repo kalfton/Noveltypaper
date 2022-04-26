@@ -92,7 +92,7 @@ Neuron_3D_space_scatter;
 control_analysis_correlation;
 
 
-%% example neurons
+% example neurons: This need the SDFs.
 %Sampleneuron;
 
 %% additional analysis
@@ -126,7 +126,8 @@ Learning_acrossday_5days_barplot;
 
 fast_slow_learning_forgetting_analysis;
 
-Sampleneuron_for_learning;
+% sample neuron plot need the task information from origin files
+% Sampleneuron_for_learning;
 
 
 %% pupil

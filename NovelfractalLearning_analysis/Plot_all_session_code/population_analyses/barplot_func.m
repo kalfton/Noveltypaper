@@ -6,11 +6,11 @@ NotNoveltySelective=find([[indices.Ppred_nov_vs_fam]>=StatisticalThreshold])';
 NoveltySelective=find([[indices.Ppred_nov_vs_fam]<StatisticalThreshold])';
 
 flipsign_set = [true, false];
-%variables = {'pred_vs_unpred_fam', 'violation_ind','recency_ind','uncertaintyindex', 'rewardvalueindex', 'rewardcuePE', 'RewInfoAnticipIndex'};
-%variablenames = {'Expected vs not expected fam', 'Violation index', 'Recency index', 'Uncertainty index', 'Reward value Index', 'Reward Prediction error', 'Info anticipation index'};
 Indvariablenames = {'NovelExcited', 'NovelInhibited','NotNoveltySelective', 'NoveltySelective'};
-plot_positiony = {21:45, 21:45, 21:45, 21:45, 21:45, 21:45};
-plot_positionx = {1:30, 41:70, 121:150, 81:110, 161:190, 195:205};
+plot_nrow = 3;
+plot_ncol= 6;
+plot_positiony = {1, 1, 1, 1, 1, 1};
+plot_positionx = {1, 2, 3, 4, 5, 6};
 StatToCompare=0;
 
 figure;
@@ -19,7 +19,7 @@ for xxx = 1:numel(flipsign_set)
     
     for xy = 1:length(Indvariablenames)
         
-        nsubplot(169,209, (xxx-1)*60+plot_positiony{xy}, plot_positionx{xy}); set(gca,'ticklength',4*get(gca,'ticklength'))
+        nsubplot(plot_nrow, plot_ncol, (xxx-1)+plot_positiony{xy}, plot_positionx{xy}); set(gca,'ticklength',4*get(gca,'ticklength'))
         %%
         eval(['Selectcrit = ' Indvariablenames{xy} ';']);
         
@@ -75,7 +75,7 @@ for xxx = 1:numel(flipsign_set)
     text(3,0.05, ['p comp=' mat2str(p, 4)])
     %% violation index for supplemental
     %% Combine excited and inhibited neurons
-    nsubplot(169,209, (xxx-1)*60+plot_positiony{5}, plot_positionx{5}); set(gca,'ticklength',4*get(gca,'ticklength'))
+    nsubplot(plot_nrow, plot_ncol, (xxx-1)+plot_positiony{5}, plot_positionx{5}); set(gca,'ticklength',4*get(gca,'ticklength'))
     %%
     if flipsign
         datasign = sign(indices.pred_nov_vs_fam);
@@ -97,15 +97,6 @@ for xxx = 1:numel(flipsign_set)
         bar(3,mean(datay,1),'w')
         ylim([-.1  .1])
         %
-        JitterVar=0.2; %jitter for scatter plot
-        R=datax;
-        R(:,2)=1.5;
-        %scatter(R(:,2),R(:,1),10,'r','filled','jitter','on', 'jitterAmount',JitterVar); hold on;
-        %
-        R=datay;
-        R(:,2)=3.5;
-        %scatter(R(:,2),R(:,1),10,'b','filled','jitter','on', 'jitterAmount',JitterVar); hold on;
-        %
         errorbar([1],mean(datax,1), std(datax,1)./sqrt(size(datax,1)),'k','LineWidth',2)
         errorbar([3],mean(datay,1), std(datay,1)./sqrt(size(datay,1)),'k','LineWidth',2)
         %
@@ -113,11 +104,6 @@ for xxx = 1:numel(flipsign_set)
         text(1.5,0.05, mat2str (signrank( datax, StatToCompare ), 5 ) )
         text(3.5,0.05, mat2str (signrank( datay, StatToCompare ), 5 ) )
         text(2.5,-0.04, mat2str (ranksum(datax, datay),4));
-        %text(1,-0.05, sprintf('n = %d', numel(datax)) );
-        %
-        %
-        %     text(1,-0.1,mat2str (( round ( ranksum( datax, dataz ) * 10000 ) ) ./ 10000 ) );
-        %     text(4,-0.1,mat2str (( round ( ranksum( datay, dataz ) * 10000 ) ) ./ 10000 ) );
     end
     
     ylabel('Discrimination (AUC)');
@@ -125,7 +111,7 @@ for xxx = 1:numel(flipsign_set)
     set(gca, 'xtick', [1,3], 'xticklabel', {'Violation/nov selective', 'Violation/other'});
     
     %text
-    nsubplot(169,209, (xxx-1)*60+plot_positiony{6}, plot_positionx{6})
+    nsubplot(plot_nrow, plot_ncol, (xxx-1)+plot_positiony{6}, plot_positionx{6});
     p = ranksum(indices.pred_vs_unpred_fam(NovelInhibited), indices.pred_vs_unpred_fam(NotNoveltySelective));
     text(0,1, ['p inhibited vs other (surprise) = ' mat2str(p, 4)]);
     p = ranksum(indices.recency_ind(NovelInhibited), indices.recency_ind(NotNoveltySelective));

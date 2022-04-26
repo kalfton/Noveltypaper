@@ -238,7 +238,7 @@ classdef noise_correlation_class < handle
         function noise_variance_analysis(obj, path)
             %% variance analysis
             figure;
-            nsubplot(169,169, 10:70, 10:70);
+            nsubplot(2,2,1,1);
             Datamean = nanmean(obj.var_nov_ax,1);
             Datastd = nanstd(obj.var_nov_ax,[],1)/sqrt(sum(~isnan(obj.var_nov_ax(:,1))));
             bar([1,2,3],Datamean, 'b'); hold on;
@@ -250,7 +250,7 @@ classdef noise_correlation_class < handle
             p = signrank(obj.var_nov_ax(:,1), obj.var_nov_ax(:,3));
             text(3.2, Datamean(3), mat2str(p,4));
             
-            nsubplot(169,169, 90:150, 10:70);
+            nsubplot(2,2,2,1);
             Datamean = nanmean(obj.var_rand_ax,1);
             Datastd = nanstd(obj.var_rand_ax,[],1)/sqrt(sum(~isnan(obj.var_rand_ax(:,1))));
             bar([1,2,3],Datamean, 'b'); hold on;
@@ -262,7 +262,7 @@ classdef noise_correlation_class < handle
             p = signrank(obj.var_nov_ax(:,1), obj.var_nov_ax(:,3));
             text(3.2, Datamean(3), mat2str(p,4));
             
-            nsubplot(169,169, 10:70, 90:150);
+            nsubplot(2,2,1,2);
             Datamean = nanmean(obj.var_nov_ax./obj.var_rand_ax,1);
             Datastd = nanstd(obj.var_nov_ax./obj.var_rand_ax,[],1)/sqrt(sum(~isnan(obj.var_rand_ax(:,1))));
             bar([1,2,3],Datamean, 'b'); hold on;

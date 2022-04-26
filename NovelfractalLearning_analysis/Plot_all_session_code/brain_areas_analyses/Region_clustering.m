@@ -84,12 +84,12 @@ end
 
 %%% Matrices which stores the p value of pairwise comparison of regions
 figure;
-axplacey = {10:100, 110:200, 110:200, 10:100};
-axplacex = {10:80, 110:180, 10:80, 110: 200};
+axplacey = {1:10, 11:20, 11:20, 1:10};
+axplacex = {1:8, 11:18, 1:8, 11: 20};
 saved_matrices = cell(3,1);
 for condInd = 1:numel(pars.experimentConditions)
 
-ax = nsubplot(210,210,axplacey{condInd},axplacex{condInd});
+ax = nsubplot(20,20,axplacey{condInd},axplacex{condInd});
 
 comparisonmatrix = zeros(numel(segmentNames));
 comparisonmatrix_p = zeros(numel(segmentNames));
@@ -132,7 +132,7 @@ colorbar;
 end
 
 % statistics on the 3 matrices
-nsubplot(210,210,axplacey{4},axplacex{4});
+nsubplot(20,20,axplacey{4},axplacex{4});
 matrixpairs = {[1,2], [2,3], [1,3]};
 for ii = 1:numel(matrixpairs)
     data1 = saved_matrices{matrixpairs{ii}(1)}(:);

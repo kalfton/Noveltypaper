@@ -5,7 +5,7 @@ fractalIDset_Slayer = pars.fractalIDset_Slayer;
 fractalIDset_Lemmy = pars.fractalIDset_Lemmy;
 smoothfun = pars.smoothfun;
 maxappearance = pars.maxappearance;
-%% try to batch the bootstrapping on server
+%% batch the bootstrapping on server
 
 
 normalized_meanFR_L1_bootstrapping = zeros(shuffling_num, maxappearance);
@@ -13,18 +13,11 @@ normalized_meanFR_L2_bootstrapping = zeros(shuffling_num, maxappearance);
 
 learning_rate_L1_s_bootstrapping = zeros(shuffling_num, maxappearance-1);
 learning_rate_L2_s_bootstrapping = zeros(shuffling_num, maxappearance-1);
-%Regression_x_names = {'Regression_FL_x', 'Regression_NL_x', 'Regression_L1_x', 'Regression_L2_x', 'Regression_L3_x', 'Regression_L4_x', 'Regression_L5_x'};
-%All_FR_names = {'All_FR_FL', 'All_FR_NL', 'All_FR_L1', 'All_FR_L2', 'All_FR_L3', 'All_FR_L4', 'All_FR_L5'};
+
 
 
 parfor xyz = 1:shuffling_num
     % initialize
-    fractalIDset = fractalIDset_Slayer; % default
-    %clear regressiondata
-%     for xxx = 1:length(fractalIDset)
-%         eval([Regression_x_names{xxx} ' = [];']);
-%         eval([All_FR_names{xxx} ' = [];']);
-%     end
     Regression_FL_x = [];
     Regression_NL_x = [];
     Regression_L1_x = [];
@@ -36,13 +29,13 @@ parfor xyz = 1:shuffling_num
     
     Randind = randi(numel(Neuronlist_learning),[numel(Neuronlist_learning),1]);
     
-    for xxx = 1:length(fractalIDset)
+    for xxx = 1:4% numel(fractalIDset)
         Regression_x = [];
         All_FR = [];
         for iii = 1:length(Neuronlist_learning)
-            if strcmpi(Neuronlist_learning(Randind(iii)).monkey, 'Lemmy')
+            if strcmpi(Neuronlist_learning(Randind(iii)).monkeyName, 'Lemmy')
                 fractalIDset = fractalIDset_Lemmy;
-            elseif strcmpi(Neuronlist_learning(Randind(iii)).monkey, 'Slayer')
+            elseif strcmpi(Neuronlist_learning(Randind(iii)).monkeyName, 'Slayer')
                 fractalIDset = fractalIDset_Slayer;
             end
             
@@ -54,8 +47,6 @@ parfor xyz = 1:shuffling_num
             end
         end
         
-%         eval([Regression_x_names{xxx} '= Regression_x;']);
-%         eval([All_FR_names{xxx} '= All_FR;']);
         
         switch xxx
             case 1

@@ -14,6 +14,10 @@ logical_multiday = cellfun(@(x) ~isempty(x.('FR7410')) | ~isempty(x.('FR7411')),
 logical_multiday = logical_multiday & cellfun(@(x) (numel(x.('learningdate'))==5 || numel(x.('learningdate'))==1 && x.('learningdate')>1), {Neuronlist_good(:).learning})';
 logical_multiday = logical_multiday;
 
+
+% variablenames = {'Learning_Familiar', 'Learning_Novel', 'Learning_1day', 'Learning_2day'};
+% fractaldateset = {nan, nan, nan, nan, nan, nan, nan};
+
 %%
 %% repeating novel fractals plot by presentation number.
 

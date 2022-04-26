@@ -27,9 +27,10 @@ flip_nov_sign = 1;
 
 %% A simplified version just for the figure plots.
 permutexy = {[4,1],[4,2],[4,3], [1,2]}; 
-
-plotplacesetx = {51:85,91:125,131:165,51:85,91:125,131:165,51:85,91:125,131:165, 11:45, 11:45, 11:45};
-plotplacesety = {1:49, 1:49, 1:49, 61:109, 61:109, 61:109, 121:169,121:169,121:169, 61:109, 121:169, 1:49};
+plot_nrow = 3;
+plot_ncol= 5;
+plotplacesetx = {2,3,4,2,1};
+plotplacesety = {1,1,1,2,1};
 
 
 Include_criterion = 'noveltyexcited';% 'noveltyinhibited', 'noveltyselective', 'All'
@@ -71,7 +72,7 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     yaxis_label = axislabel_for_plot{permutexy{xyw}(2)};
     
     figure(fig1);
-    nsubplot(169,169, plotplacesety{xyw}, plotplacesetx{xyw}); set(gca,'ticklength',4*get(gca,'ticklength'));
+    nsubplot(plot_nrow, plot_ncol, plotplacesety{xyw}, plotplacesetx{xyw}); set(gca,'ticklength',4*get(gca,'ticklength'));
     
     
     %% All neurons
@@ -80,7 +81,7 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     binedge = linspace(lim(1),lim(2),nbin+1);
     binmid = 0.5*binedge(1:(end-1)) + 0.5*binedge(2:end);
     
-    [n,xedge,yedge] = histcounts2(xaxis_ind,yaxis_ind,binedge,binedge);
+    [n,~,~] = histcounts2(xaxis_ind,yaxis_ind,binedge,binedge);
     
     n = n'; % transpose so that x=columns and y=rows
     
@@ -98,10 +99,8 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     axis([-1 1 -1 1]); %%axis square;
     xlabel(xaxis_label)
     ylabel(yaxis_label)
-    %zlabel('neuron count');
     line([-1 1],[0 0],'color',[0.3 0.3 0.3],'LineWidth',1);
     line([0 0],[-1 1],'color',[0.3 0.3 0.3],'LineWidth',1);
-    %view(0,90);
     
     %%
     % now get the point which both x and y are not nan
@@ -137,7 +136,7 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     
     %% plot a curve shows the tendency by binning
     figure(fig2);
-    nsubplot(169,169, plotplacesety{xyw}, plotplacesetx{xyw}); set(gca,'ticklength',4*get(gca,'ticklength'));
+    nsubplot(plot_nrow, plot_ncol, plotplacesety{xyw}, plotplacesetx{xyw}); set(gca,'ticklength',4*get(gca,'ticklength'));
     bins = linspace(0,1,4);%-0.5:0.2:0.5;
     bins(1) = bins(1)-0.001;% to include the left edge
     bins(end) = bins(end)+0.001;% to include the right edge
@@ -225,16 +224,13 @@ for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
     end
     
 end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% plot corr(sensory surprise & recency) vs novelty index
 if ~strcmpi(Include_criterion, 'All')
 
 % compare whether two corr is significantly different
 figure(fig2);
-xyw=12;
-nsubplot(169,169, plotplacesety{xyw}, plotplacesetx{xyw}); set(gca,'ticklength',4*get(gca,'ticklength'))
+nsubplot(plot_nrow, plot_ncol, plotplacesety{end}, plotplacesetx{end}); set(gca,'ticklength',4*get(gca,'ticklength'))
 
 Corrset1 = {[4,1],[4,2]};
 Corrset2 = {[4,5],[4,6]};

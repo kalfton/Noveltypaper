@@ -2,10 +2,10 @@
 
 variables = {'pred_nov_vs_fam','pred_vs_unpred_fam','recency_ind_match_pos'};
 variablenames = {'Novelty index', 'Sensory surprise index', 'Recency index'};
-plot_nrow = 2;
+plot_nrow = 4;
 plot_ncol= 4;
-plot_positiony = {1, 1, 1, 1};
-plot_positionx = {1, 2, 3, 4};
+plot_positiony = {1, 2, 3, 4};
+plot_positionx = {1, 1, 1, 1};
 
 StatToCompare=0;
 varthr = 0.001;
@@ -38,10 +38,10 @@ set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Pape
 
 nsubplot(plot_nrow, plot_ncol, plot_positiony{1}, plot_positionx{1}); set(gca,'ticklength',4*get(gca,'ticklength'))
 
-datax= -([pupillist_all.pred_nov_vs_fam]'*2-1);
-datay= -([pupillist_all.pred_vs_unpred_fam]'*2-1);
-dataz= -([pupillist_all.recency_ind_match_pos]'*2-1);
-
+datax= [pupillist_all.pred_nov_vs_fam]'*2-1;
+datay= [pupillist_all.pred_vs_unpred_fam]'*2-1;
+dataz= [pupillist_all.recency_ind_match_pos]'*2-1;
+%includeind = 283 %(~isnan(datax) & ~isnan(datay) & ~isnan(dataz));
 datax= datax(includeind);
 datay= datay(includeind);
 dataz= dataz(includeind);
@@ -49,7 +49,7 @@ dataz= dataz(includeind);
 bar(1,mean(datax,1),'w')
 bar(3,mean(datay,1),'w')
 bar(5,mean(dataz,1),'w')
-ylim([-.4 .6])
+ylim([-.6 .4])
 %
 errorbar([1],mean(datax,1), std(datax,1)./sqrt(size(datax,1)),'k','LineWidth',2)
 errorbar([3],mean(datay,1), std(datay,1)./sqrt(size(datay,1)),'k','LineWidth',2)
@@ -63,8 +63,8 @@ text(5.5,0.1, mat2str (( round ( signrank( dataz, StatToCompare ) * 10000 ) ) ./
 
 text(4,-0.1,['n = ', mat2str(numel(datax))]);
 
-ylabel('Pupil contraction (-pupil diameter/area)')
-set(gca, 'xtick', [1,3,5], 'xticklabel', variablenames, 'xticklabelRotation', -45);
+ylabel('PupilDiscrimination (AUC)')
+set(gca, 'xtick', [1,3,5], 'xticklabel', variablenames);
 
 
 
@@ -101,6 +101,7 @@ for ii = 1:numel(sdf_variables)
     ylabel('Pupil diameter/area');
     
     lgd = legend([plt1.mainLine, plt2.mainLine], sdf_legend{ii}, 'interpreter', 'None');
+    lgd.Position(1) = lgd.Position(1)+0.1;
 end
 
 print(gcf,'-dpdf', '-painters',fullfile(plotpath, ['Indices_barplot_and_sdfs_pupil_NFL_' Monkey '.pdf']));

@@ -6,9 +6,10 @@ indices_for_plot = {'pred_vs_unpred_fam','recency_ind_match_pos','violation_ind'
 P_value_for_plot = {'P_pred_vs_unpred_fam_perm', 'P_recency_ind_match_pos','P_violation_ind_perm', 'P_pred_nov_vs_fam',...
     'rewardvalueindexP_precue','RewInfoAnticipIndexP_split'};
 
-plotplacesetx = {11:40, 51:80,91:120,131:160,...
-    11:40, 51:80,91:120,131:160,11:40, 51:80,91:120,131:160};
-plotplacesety = {1:49, 1:49, 1:49, 1:49, 61:109, 61:109, 61:109, 61:109, 121:169,121:169,121:169, 121:169};
+plot_nrow = 2;
+plot_ncol= 4;
+plotplacesety = {1, 1, 1, 1, 2, 2};
+plotplacesetx = {1, 2, 3, 4, 1, 2};
 
 
 Include_type = 'Noveltyexcited'; %'Noveltyexcited' or 'Noveltyinhibited';% 
@@ -25,7 +26,7 @@ end
 %% a mega figure summarizing the info task's finding.
 figure;
 % show that 3 reward related indices's measure is above chance
-nsubplot(169,169, plotplacesety{1}, plotplacesetx{1}); set(gca,'ticklength',4*get(gca,'ticklength'))
+nsubplot(plot_nrow, plot_ncol, plotplacesety{1}, plotplacesetx{1}); set(gca,'ticklength',4*get(gca,'ticklength'))
 Pvaluenames = {'rewardvalueindexP_precue', 'RewInfoAnticipIndexP_split'};
 Pvaluelabel = {'Reward value', 'Infoanti'};
 
@@ -98,14 +99,14 @@ elseif strcmpi(Include_type, 'Noveltyinhibited')
     y_limit = [-0.1,0.15];
 end
 %plots
-nsubplot(169,169, plotplacesety{2}, plotplacesetx{2}); set(gca,'ticklength',4*get(gca,'ticklength'))
+nsubplot(plot_nrow, plot_ncol, plotplacesety{2}, plotplacesetx{2}); set(gca,'ticklength',4*get(gca,'ticklength'))
 bar([1:4],corrvalue(1:4), 'k');
 errorbar([1:4],corrvalue(1:4), corrstd(1:4), '.');
 ylabel('correlation with novelty index');
 ylim(y_limit);
 set(gca, 'xtick', [1:4], 'xticklabel', corr_label(1:4), 'XTickLabelRotation', -45);
 
-nsubplot(169,169, plotplacesety{3}, plotplacesetx{3}); set(gca,'ticklength',4*get(gca,'ticklength'))
+nsubplot(plot_nrow, plot_ncol, plotplacesety{3}, plotplacesetx{3}); set(gca,'ticklength',4*get(gca,'ticklength'))
 bar([1:2],corrvalue(4+(1:2)), 'k');
 errorbar([1:2],corrvalue(4+(1:2)), corrstd(4+(1:2)), '.');
 ylabel('correlation with sensory surprise index');
@@ -113,7 +114,7 @@ ylim(y_limit);
 set(gca, 'xtick', [1:2], 'xticklabel', corr_label(4+(1:2)), 'XTickLabelRotation', -45);
 pbaspect([3,5,1])
 
-nsubplot(169,169, plotplacesety{4}, plotplacesetx{4}); set(gca,'ticklength',4*get(gca,'ticklength'))
+nsubplot(plot_nrow, plot_ncol, plotplacesety{4}, plotplacesetx{4}); set(gca,'ticklength',4*get(gca,'ticklength'))
 bar([1:2],corrvalue(6+(1:2)), 'k');
 errorbar([1:2],corrvalue(6+(1:2)), corrstd(6+(1:2)), '.');
 ylabel('correlation with recency index');
@@ -123,7 +124,7 @@ text(2,-0.08, ['n = ' mat2str(corr_n(1))]);
 pbaspect([3,5,1])
 
 % test to compare whether two rhos are significantly different.
-nsubplot(169,169, plotplacesety{5}, plotplacesetx{5}); set(gca,'ticklength',4*get(gca,'ticklength'))
+nsubplot(plot_nrow, plot_ncol, plotplacesety{5}, plotplacesetx{5}); set(gca,'ticklength',4*get(gca,'ticklength'))
 
 Corrset1 = {[4,1],[4,2]};
 Corrset2 = {[4,5],[4,6]};
@@ -153,7 +154,7 @@ for ii=1:numel(Corrset1)
 end
 ylim([-1 ytext]);
 
-nsubplot(169,169, plotplacesety{6}, plotplacesetx{6});
+nsubplot(plot_nrow, plot_ncol, plotplacesety{6}, plotplacesetx{6});
 xlim([1,10]);
 ylim([0,numel(corr_permutexy)+1]);
 for xyw = 1: numel(corr_permutexy)

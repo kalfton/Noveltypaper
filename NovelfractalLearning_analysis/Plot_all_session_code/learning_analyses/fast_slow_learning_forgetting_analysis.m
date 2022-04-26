@@ -7,9 +7,9 @@ logical_multiday = logical_multiday;
 novelty_resp_logic = [Neuronlist_good(:).learningforgetinganalysis];
 
 withindaylearningroc = [Neuronlist_good(novelty_resp_logic).withindaylearning_newindex];
-acrossdayforgetroc = [Neuronlist_good(novelty_resp_logic).acrossdayforget_newindex];%.*withindaylearningroc;
-withindaylearningroc_p = ones(size(withindaylearningroc));%[Neuronlist_good(novelty_resp_logic).withindaylearningroc_p];
-acrossdayforgetroc_p= ones(size(acrossdayforgetroc));%[Neuronlist_good(novelty_resp_logic).acrossdayforgetroc_p];
+acrossdayforgetroc = [Neuronlist_good(novelty_resp_logic).acrossdayforget_newindex];
+withindaylearningroc_p = ones(size(withindaylearningroc));% Did not include the p value in this plot.
+acrossdayforgetroc_p= ones(size(acrossdayforgetroc));% Did not include the p value in this plot.
 
 scatterplot_goodlooking([withindaylearningroc' withindaylearningroc_p'], [acrossdayforgetroc', acrossdayforgetroc_p'], ...
     'Within day learning index', 'Across day forgetting index', [-1.1,1.1], [-1.1,1.1], plotpath);

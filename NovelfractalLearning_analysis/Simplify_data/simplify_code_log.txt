@@ -3,3 +3,9 @@ use:
 if exist(*,  'var')
 
 end
+
+Main figure for brain area?
+
+%% make the nsuplot input parameter smaller:
+Sampleneuron, SDF_plot_Crossvalidation, SDF_Crossvalidation_infonewtask:
+Can't test the code because there is no SDFs, remain unchanged for now.

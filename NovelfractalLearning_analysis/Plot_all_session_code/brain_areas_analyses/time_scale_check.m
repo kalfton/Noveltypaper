@@ -22,6 +22,8 @@ pars.experimentindices = {'pred_nov_vs_fam', 'pred_vs_unpred_fam', 'recency_ind_
 pars.celltype = {'positive', 'negative','selective'};
 
 monkeyName = 'Combined'; % 'Slayer','Lemmy'
+celltype = pars.celltype;
+barinterv = 5;
 
 %%
 switch monkeyName
@@ -83,7 +85,7 @@ end
 %plots
 
 figure;
-nsubplot(210,210,60:200,10:100);
+nsubplot(1,1,1,1);
 
 clear plot_id;
 w = 0.2;
@@ -91,7 +93,7 @@ color = [0 0.7 0.7];
 xdata = timescalemean;
 color_star = [1 0 0];
 barposition = (barinterv)*(1:numel(xdata));
-plot_id(plotInd) = barh(barposition, xdata,w,'FaceColor','r');
+barh(barposition, xdata,w,'FaceColor','r');
 %plot the trending line
 errorbar(xdata,barposition, timescalestd, 'horizontal', 'LineStyle','none', 'Marker', '.');
 xlabel('timescale(ms)');

@@ -196,7 +196,7 @@ classdef novelty_classifier_class < handle
             %training correct rate
             correct_thr = 0.5;
             figure;
-            nsubplot(169,169, 1:70, 1:70);
+            nsubplot(2,2,1,1);
             Datamean = nanmean(obj.train_correct_rate_all,1);
             Datastd = nanstd(obj.train_correct_rate_all,[],1)./sqrt(sum(~isnan(obj.train_correct_rate_all),1));
             bar([1,2,3,4],Datamean, 'b'); hold on;
@@ -206,12 +206,12 @@ classdef novelty_classifier_class < handle
                 p = signrank(obj.train_correct_rate_all(:,ii),0.5);
                 text(ii,1, ['p = ' mat2str(p,4)]);
             end
-            set(gca, 'xtick', [1,2,3,4], 'xticklabel', obj.condition_names)
+            set(gca, 'xtick', [1,2,3,4], 'xticklabel', obj.condition_names,'xticklabelRotation', -45)
             ylabel('Correction rate');
             title(['classifier training correction rate']);
             
             %testing correct rate
-            nsubplot(169,169, 81:150, 81:150);
+            nsubplot(2,2,1,2);
             % statistical test
             Datamean = zeros(1,4);
             Datastd = zeros(1,4);
@@ -226,7 +226,7 @@ classdef novelty_classifier_class < handle
             bar([1,2,3,4],Datamean, 'b'); hold on;
             errorbar([1,2,3,4],Datamean, Datastd,'r.', 'CapSize',10);
             plot(get(gca, 'xlim'),[0.5,0.5], 'k');
-            set(gca, 'xtick', [1,2,3,4], 'xticklabel', obj.condition_names)
+            set(gca, 'xtick', [1,2,3,4], 'xticklabel', obj.condition_names,'xticklabelRotation', -45)
             
             ylim([0.4,0.65]);
             ylabel('Correction rate');

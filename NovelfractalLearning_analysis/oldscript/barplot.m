@@ -58,37 +58,8 @@ set(gca, 'xtick', [1,3,5], 'xticklabel', {'Nov Excited', 'Nov Inhibited', 'Other
 
 end
 
-% %% violin plot
-% for xy = 1:3
-% nsubplot(169,209, plot_positiony{xy+3}, plot_positionx{xy+3}); set(gca,'ticklength',4*get(gca,'ticklength'))
-% 
-% eval(['IndexToPlot = ' variables{xy} ';']);
-% 
-% datax= [IndexToPlot(NovelExcited);];
-% datay= [IndexToPlot(NovelInhibited)];
-% dataz= IndexToPlot(NotNoveltySelective);
-% datax = datax(~isnan(datax));
-% datay = datay(~isnan(datay));
-% dataz = dataz(~isnan(dataz));
-% %%
-% if ~isempty(datax) && ~isempty(datay) && ~isempty(dataz)
-%     violin({datax, datay, dataz}, 'xlabel', {'Nov Excited', 'Nov Inhibited', 'Other'}); hold on;
-%     plot(get(gca, 'xlim'),[0,0], 'k', 'linewidth', 1);
-%     ylim([-0.2,0.2])
-%     
-% end
-% 
-% ylabel('Discrimination (AUC)')
-% xlabel(variablenames{xy})
-% set(gca, 'xtick', [1,2,3], 'xticklabel', {'Nov Excited', 'Nov Inhibited', 'Other'});
-% end
 
 %% put recency/ surprise in a plot
-%unexpected index
-%unp_vs_pred_nov_odd = [Neuronlist_odd(:).unp_vs_pred_nov]'-0.5;
-% NovelExcited_even = find([Neuronlist_even(:).pred_nov_vs_fam]>0.5 & [Neuronlist_even(:).P_pred_nov_vs_fam]<=StatisticalThreshold);
-% NovelInhibited_even = find([Neuronlist_even(:).pred_nov_vs_fam]<0.5 & [Neuronlist_even(:).P_pred_nov_vs_fam]<=StatisticalThreshold);
-% NotNoveltySelective_even = find([Neuronlist_even(:).P_pred_nov_vs_fam]>StatisticalThreshold);
 
 variables = {'pred_vs_unpred_fam', 'violation_ind','recency_ind','uncertaintyindex', 'rewardvalueindex', 'rewardcuePE', 'RewInfoAnticipIndex'};
 variablenames = {'Expected vs not expected fam', 'Violation index', 'Recency index', 'Uncertainty index', 'Reward value Index', 'Reward Prediction error', 'Info anticipation index'};

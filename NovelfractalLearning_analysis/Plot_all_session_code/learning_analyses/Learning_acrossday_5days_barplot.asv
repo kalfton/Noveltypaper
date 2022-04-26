@@ -139,15 +139,15 @@ figure;
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
 plot_nrow = 2;
 plot_ncol= 3;
-plotplacesetx = {1,2};
-plotplacesety = {1,1};
-% % Write down the criteria
-% nsubplot(plot_nrow, plot_ncol, plotplacesety{end}, plotplacesetx{end});
-% text(1,1,Select_criteria{xy}, 'Fontsize', 10);
-% text(1,0,['N = ' num2str(Neuronum)], 'Fontsize', 10);
-% text(1,0.2,['Frac N = ' num2str(appearnum)], 'Fontsize', 10);
-% 
-% axis off;
+plotplacesetx = {11:45,11:45};
+plotplacesety = {121:169, 1:49};
+% Write down the criteria
+nsubplot(plot_nrow, plot_ncol, plotplacesety{end}, plotplacesetx{end});
+text(1,1,Select_criteria{xy}, 'Fontsize', 10);
+text(1,0,['N = ' num2str(Neuronum)], 'Fontsize', 10);
+text(1,0.2,['Frac N = ' num2str(appearnum)], 'Fontsize', 10);
+
+axis off;
 
 
 % summarize the Roc of five days:

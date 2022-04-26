@@ -79,7 +79,7 @@ end
 
 %plots
 figure;
-nsubplot(210,210,60:200,10:100);
+nsubplot(21,21,6:20,1:10);
 plotInd = 0;
 barInd = zeros(1,numel(experimentConditions));
 clear plot_id;
@@ -328,8 +328,8 @@ for condInd = 1:numel(correlation_pairs)
     end
 end
 
-subplotposition_x = {110:130, 140:160,170:190};
-subplotposition_y = {10:50, 60:200};
+subplotposition_x = {11:13, 14:16,17:19};
+subplotposition_y = {1:5, 6:20};
 
 plotInd = 0;
 barInd = zeros(1,numel(correlation_pairs));
@@ -338,7 +338,7 @@ clear plot_id
 currenttype = Noveltytypes{4};
 
 for condInd = 1:numel(correlation_pairs)
-    nsubplot(210,210,subplotposition_y{2}, subplotposition_x{condInd});
+    nsubplot(21,21,subplotposition_y{2}, subplotposition_x{condInd});
     plotInd = plotInd + 1;
     w = 0.05;
     color = [0 0.7 0.7];
@@ -365,21 +365,9 @@ else
 end
 end
 
-if excludemua
-    str2title = {[' Single Units Original Areas ']};
-else
-    str2title = {[' Multi+Single Units Original Areas '] };
-end
-
-str2title{end + 1} = ['Correlation are calculated with cell # >',num2str(minmum_num)];
-str2title{end + 1} = ['Cell type: ',currenttype];
-
-
-title(str2title, 'interpreter','none');
-
 %% Plot an histogram on top of the correlation bar plot
 for condInd = 1:numel(correlation_pairs)
-    nsubplot(210,210,subplotposition_y{1}, subplotposition_x{condInd});
+    nsubplot(21,21,subplotposition_y{1}, subplotposition_x{condInd});
     w = 0.05;
     color = [0 0.7 0.7];
     perc = [Correlations.(currenttype)(:,condInd)];

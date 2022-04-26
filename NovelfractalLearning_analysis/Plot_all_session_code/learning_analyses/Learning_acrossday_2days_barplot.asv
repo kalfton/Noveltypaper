@@ -8,7 +8,7 @@ logical_for_neuronlist = {[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThr
     [Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'<0 & logical_multiday};
 
 Select_criteria = {'Novelty excited', 'Novelty inhibited'};
-variablenames = {'Learning_1day', 'Learning_2day'};
+variablenames = {'Learning_Familiar', 'Learning_Novel', 'Learning_1day', 'Learning_2day'};
 appearnum = 5;
 
 for xy = 1: length(logical_for_neuronlist)
@@ -28,10 +28,10 @@ end
 
 figure;
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
-plot_nrow = 2;
-plot_ncol= 3;
-plotplacesety = {1,1,1};
-plotplacesetx = {1,2,3};
+plot_nrow = 3;
+plot_ncol= 6;
+plotplacesety = {121:169, 1:49, 61:109, 61:109, 61:109, 61:109, 61:109,1:49,121:169, 1:49};
+plotplacesetx = {11:45,11:45,11:45,51:85,91:125,131:165,171:205,91:125,131:165, 171:205};
 % Write down the criteria etc.
 nsubplot(plot_nrow, plot_ncol, plotplacesety{end}, plotplacesetx{end});
 text(1,1,Select_criteria{xy}, 'Fontsize', 10);
@@ -42,17 +42,42 @@ axis off;
 
 
 for i = 1:length(variablenames)
+    eval(['All_FR_start =' variablenames{i} '_start;']);
+    eval(['All_FR_end =' variablenames{i} '_end;']);
+    nsubplot(plot_nrow, plot_ncol, plotplacesety{i}, plotplacesetx{i});hold on;
+    plot([0.5,2.5], [0,0], 'color', [0.8,0.8,0.8])
+    
+    Datamean = [nanmean(All_FR_start), nanmean(All_FR_end)];
+    Datastd = [nanstd(All_FR_start)/sqrt(length(All_FR_start)), nanstd(All_FR_end)/sqrt(length(All_FR_end))];
+    
+    errorbar([1,2],Datamean, Datastd, 'r');
+    
+    
+    
+    set(gca, 'xtick', [1,2], 'xticklabel', {'Begin', 'End'});
+    title([variablenames{i} 'Fractal'], 'interpreter', 'none');
+    xlim([0.5,2.5]);
+    ylim([-1,1]);
+    ylabel('zscored firing rate');
+    
     % ROC
-    if ~contains(variablenames{i},{'Familiar', 'Novel'}) %only plot learning
+    if ~contains(variablenames{i},'Familiar')
         eval(['All_ROC_start =' variablenames{i} '_startroc;']);
         eval(['All_ROC_end =' variablenames{i} '_endroc;']);
-        nsubplot(plot_nrow, plot_ncol, plotplacesety{i}, plotplacesetx{i});
+        nsubplot(plot_nrow, plot_ncol, plotplacesety{i}+180, plotplacesetx{i});
         plot([0.5,2.5], [0.5,0.5], 'color', [0.8,0.8,0.8])
         
         Datamean = [nanmean(All_ROC_start), nanmean(All_ROC_end)];
         Datastd = [nanstd(All_ROC_start)/sqrt(length(All_ROC_start)), nanstd(All_ROC_end)/sqrt(length(All_ROC_end))];
         [p_paired, ~] = signrank(All_ROC_start-All_ROC_end);
         title([variablenames{i} 'Fractal, p = ' mat2str(p_paired,3)], 'interpreter', 'none');
+        
+        if contains(variablenames{i},'Learning_Novel')
+            Learning_Novel_Datamean = Datamean;
+            Learning_Novel_Datastd = Datastd;
+        elseif contains(variablenames{i},'Learning') && contains(variablenames{i},'day')
+            errorbar([1,2],Learning_Novel_Datamean, Learning_Novel_Datastd, 'r');
+        end
         
         % p ranksum between end of Ln day and begin of Ln+1 day
         if contains(variablenames{i},'Learning') && contains(variablenames{i},'day') && ~contains(variablenames{i},'1day')

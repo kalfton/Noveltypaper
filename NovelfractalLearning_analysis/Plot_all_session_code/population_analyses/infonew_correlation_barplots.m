@@ -165,6 +165,6 @@ end
 
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
-
+print(gcf,'-dpdf', '-painters',fullfile(plotpath,'Reward_Novelty_corr_control.pdf'));
 
 

@@ -13,9 +13,11 @@ gauswindow_ms = 50;
 
 Monkey = 'Slayer';
 if strcmpi('Slayer', Monkey)
-    filepath = 'Y:\PLEXON_GRAYARRAY_Slayer\NovelFractalLearning_Slayer_combinedsorting';
+    filepath = './raw_data/Monkey_S_raw';
+elseif strcmpi('Lemmy', Monkey)
+    filepath = '/raw_data/Monkey_L_raw';
 else
-    filepath = 'Y:\PLEXON_GRAYARRAY_Lemmy\NovelFractalLearning_Lemmy_combinedsorting';
+    error('Wrong Monkey name');
 end
 
 for id = 1:numel(Sampleneuron_set)
@@ -94,8 +96,7 @@ figure;
 nsubplot(2,2, 1,2);
 text(0,1, ['Region ' sampleneuron.region]);
 text(0,2,sampleneuron.filename,'interpreter', 'none');
-text(0,3,['Depth ' mat2str(sampleneuron.electrodeDepth,3)]);
-text(0,4,sampleneuron.name);
+text(0,3,sampleneuron.name);
 ylim([0,5]);
 axis off;
     
@@ -107,7 +108,7 @@ familiarfractype = [6300:6303];
 if strcmpi('Slayer', Monkey)
     learningfractype = [7410,7411,7420,7421];%[7410:7415;7420:7425];
     learningfractype2 = [7412:7415, 7422:7425];
-else
+else % Lemmy
     learningfractype = [7300:7303];
     learningfractype2 = [7410,7420];
 end
@@ -313,7 +314,7 @@ ylim([1,5]);
 axis off;
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
-print(gcf,'-dpdf', '-painters',fullfile(plotpath, '\sampleneurons', ['sampleneurons_' sampleneuron.name, sampleneuron.filename '.pdf']));
+print(gcf,'-dpdf', '-painters',fullfile(plotpath, '\sampleneurons', ['sampleneurons_learning_' sampleneuron.name, sampleneuron.filename '.pdf']));
 
 end
 

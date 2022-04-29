@@ -207,7 +207,7 @@ classdef noise_correlation_class < handle
             
             
             figure
-            nsubplot(169,169, 1:70, 1:70);
+            nsubplot(2, 2, 1, 1);
             Datamean = nanmean(obj.corrmean_all(included,:),1);
             Datastd = nanstd(obj.corrmean_all(included,:),[],1)/sqrt(sum(~isnan(obj.corrmean_all(included,1))));
             bar([1,2,3,4],Datamean, 'b'); hold on;
@@ -267,7 +267,7 @@ classdef noise_correlation_class < handle
             Datastd = nanstd(obj.var_nov_ax./obj.var_rand_ax,[],1)/sqrt(sum(~isnan(obj.var_rand_ax(:,1))));
             bar([1,2,3],Datamean, 'b'); hold on;
             errorbar([1,2,3],Datamean, Datastd,'r.');
-            title('difference or ratio in variance along novel axis and random axis');
+            title('Ratio of the variance along novel axis vs. random axis');
             set(gca, 'xtick', [1,2,3], 'xticklabel', {'5 Novel', '5 Familiar', '1 Familiar'}, 'xticklabelRotation', -45);
             p = signrank(obj.var_nov_ax(:,1), obj.var_nov_ax(:,2));
             text(2.2, Datamean(2), mat2str(p,4));

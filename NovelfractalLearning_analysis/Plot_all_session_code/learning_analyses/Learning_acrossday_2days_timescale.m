@@ -17,9 +17,9 @@ logical_multiday = logical_multiday;
 %%
 %% repeating novel fractals plot by presentation number.
 
-logical_for_neuronlist = {[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'>0 & logical_multiday ...
-     [Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'<0  & logical_multiday ...
+logical_for_neuronlist = {[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'>0 & logical_multiday
      };
+    %[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'<0  & logical_multiday
 
 
 Select_criteria = {'Nov excited', 'Nov Inhibited'};

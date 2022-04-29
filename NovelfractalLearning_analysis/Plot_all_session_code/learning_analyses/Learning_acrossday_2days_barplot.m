@@ -5,8 +5,8 @@ logical_multiday = logical_multiday & cellfun(@(x) (numel(x.('learningdate'))==5
 logical_multiday = logical_multiday;
 
 logical_for_neuronlist = {[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'>0 & logical_multiday
-    [Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'<0 & logical_multiday};
-
+    };
+    %[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'<0 & logical_multiday
 Select_criteria = {'Novelty excited', 'Novelty inhibited'};
 variablenames = {'Learning_1day', 'Learning_2day'};
 appearnum = 5;
@@ -90,12 +90,12 @@ print(gcf,'-dpdf', '-painters',[plotpath '/Learning_across_day_' Select_criteria
 end
 
 
-%% recency and surprise index test
+%% surprise effect in learning
 figure;
 novelty_resp_logic = [Neuronlist_good(:).P_pred_nov_vs_fam]<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]>0 ...
     & ~isnan([Neuronlist_good(:).learning_surprise])...
     & logical_multiday';
-title(['Learning trial type testing surprise and rency, n = ' mat2str(sum(novelty_resp_logic))]);
+title(['Learning trial type testing surprise, n = ' mat2str(sum(novelty_resp_logic))]);
 learning_surprise = [Neuronlist_good(novelty_resp_logic).learning_surprise];
 
 
@@ -112,3 +112,4 @@ xlim([0,2]);
 y_limit = get(gca, 'ylim');
 p = signrank(learning_surprise);
 text(1,y_limit(1)*0.7,['p = ' mat2str(p,3)]);
+print(gcf,'-dpdf', '-painters',[plotpath '/Learning_surprise.pdf']);

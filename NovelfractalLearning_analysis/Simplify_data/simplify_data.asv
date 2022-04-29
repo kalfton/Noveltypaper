@@ -44,9 +44,9 @@
 
 
 % Neuronlist simplification
-load(fullfile('..\Plot_all_session_code','neuronliststruct_all'), 'Neuronlist_good', 'Neuronlist_even', 'Neuronlist_odd');
+load(fullfile('Y:\Kaining\NovelfractalLearning_analysis\NovelfractalLearning_analysis\Plot_all_session_code','neuronliststruct_all'), 'Neuronlist_good', 'Neuronlist_even', 'Neuronlist_odd');
 allfieldnames = fieldnames(Neuronlist_good);
-fieldname_2_include = {'name';'electrodeID'; 'electrodeDepth'; 'ISIviolationrate'; 'unitQuality'; 'contaminationRate'; 'exclude'; 'excludemua';
+fieldname_2_include = {'name';'electrodeID'; 'electrodeDepth'; 'fcsvCoordinates_Matlab'; 'ISIviolationrate'; 'unitQuality'; 'contaminationRate'; 'exclude'; 'excludemua';
 'recency_ind_match_pos'; 'P_recency_ind_match_pos'; 'pred_nov_vs_fam'; 'P_pred_nov_vs_fam';
 'pred_vs_unpred_fam'; 'P_pred_vs_unpred_fam_perm'; 'violation_ind'; 'P_violation_ind_perm';
 'pred_nov_vs_fam_control1'; 'pred_nov_vs_fam_control2';
@@ -67,34 +67,56 @@ fieldname_2_include = {'name';'electrodeID'; 'electrodeDepth'; 'ISIviolationrate
 'withindaylearning_newindex_p'; 'acrossdayforget_newindex_p';
 'P_object_select_novel_start'; 'obj_select_ind_novel_start';
 'P_object_select_novel_end'; 'obj_select_ind_novel_end';
-'intrinsic_time';
 };
 
 % 'pred_nov_vs_fam_sdfs'; 'recency_ind__match_pos_sdfs'; 'pred_vs_unpred_fam_sdfs'; 'violation_ind_comp_sdf';
 % 'SDF_rew100ni'; 'SDF_rew50ni_del'; 'SDF_rew50ni_ndel'; 'SDF_rew0ni';
 % 'SDF_rew100i'; 'SDF_rew50i_del'; 'SDF_rew50i_ndel'; 'SDF_rew0i';
 % 'pred_nov_vs_fam_sdfs';'recency_ind_sdfs'; 'pred_vs_unpred_fam_sdfs'; 'violation_ind_comp_sdf';
-% 'zscoremean_info'; 'zscorestd_info'; 'zscoremean'; 'zscorestd'; 
+% 'zscoremean_info'; 'zscorestd_info'; 'zscoremean'; 'zscorestd'; 'intrinsic_time';
+
 
 
 fieldname_2_remove = setdiff(allfieldnames, fieldname_2_include);
 
 % remove mua and excluded neurons
 Neuronlist_good([Neuronlist_good.exclude]==1)=[];
-Neuronlist_even([Neuronlist_good.exclude]==1)=[];
-Neuronlist_odd([Neuronlist_good.exclude]==1)=[];
+% Neuronlist_even([Neuronlist_good.exclude]==1)=[];
+% Neuronlist_odd([Neuronlist_good.exclude]==1)=[];
 
 
 Neuronlist_good = rmfield(Neuronlist_good,fieldname_2_remove);
-Neuronlist_even = rmfield(Neuronlist_even,fieldname_2_remove(isfield(Neuronlist_even,fieldname_2_remove)));
-Neuronlist_odd = rmfield(Neuronlist_odd,fieldname_2_remove(isfield(Neuronlist_odd,fieldname_2_remove)));
+% Neuronlist_even = rmfield(Neuronlist_even,fieldname_2_remove(isfield(Neuronlist_even,fieldname_2_remove)));
+% Neuronlist_odd = rmfield(Neuronlist_odd,fieldname_2_remove(isfield(Neuronlist_odd,fieldname_2_remove)));
+
+
+% if the depth is negative or too large make them nan
+
+for ii = 1: numel(Neuronlist_good)
+    if Neuronlist_good(ii).electrodeDepth<0 || Neuronlist_good(ii).electrodeDepth>100
+        %Neuronlist_good(ii).electrodeDepth = nan;
+        Neuronlist_good(ii).fcsvCoordinates_Matlab = [nan, nan, nan];
+    end
+end
+Neuronlist_good = Neuronlist_good
+
+
+% fix one specific neuron:
+neuronind = find(cellfun(@isempty,{Neuronlist_good(:).region}));%8142
+%Neuronlist_good(ii).electrodeDepth = nan;
+Neuronlist_good(neuronind).fcsvCoordinates_Matlab = [nan, nan, nan];
+Neuronlist_good(neuronind).region = "Not Assigned";
+Neuronlist_good(neuronind).regionIndex = 45;
+
+Neuronlist_good = RenameField(Neuronlist_good, 'fcsvCoordinates_Matlab', 'electrodeLocation');
+
 
 % separate Slayer and Lemmy's neuronlist
 
 Neuronlist_Slayer = Neuronlist_good([Neuronlist_good.MonkeyID]==1);
 Neuronlist_Lemmy = Neuronlist_good([Neuronlist_good.MonkeyID]==2);
-save(fullfile('..\Plot_all_session_code','neuronliststruct_Lemmy_simplified'), 'Neuronlist_Slayer');
-
+save(fullfile('..\Plot_all_session_code\maindata','neuronliststruct_Lemmy_simplified'), 'Neuronlist_Slayer');
+save(fullfile('..\Plot_all_session_code\maindata','neuronliststruct_Slayer_simplified'), 'Neuronlist_Lemmy');
 
 %% 
 cd ../Plot_all_session_code

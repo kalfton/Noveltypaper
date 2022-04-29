@@ -190,75 +190,75 @@ graph1 = subplot(4,2,[1,3]);
 set(gca,'XTickLabelRotation',-25);
 xl = xlim;
 
-plotInd = 0;
-barInd = zeros(1,numel(experimentConditions));
-clear plot_id;
-
-% normalize the mean of the indices
-if pars.normalize
-    areas_indices_mean_n2 = (areas_indices_mean-min(areas_indices_mean,[],1))./(max(areas_indices_mean,[],1)-min(areas_indices_mean,[],1));
-else
-    areas_indices_mean_n2 = areas_indices_mean;
-end
-celltype = pars.celltype;
-graph_c = subplot(4,2,5);
-for condInd = 1:numel(experimentConditions)
-    plotInd = plotInd + 1;
-    w = 0.05;
-    color = [0 0.7 0.7];
-    xdata = areas_indices_mean_n2(dendr_perm,condInd);
-    percCoord = xdata;
-    barInd(condInd) = plotInd;
-    color_star = [1 0 0];
-    barposition = (barinterv)*(1:numel(xdata))+numel(experimentConditions)-condInd;
-    %plot_id(plotInd) = barh(barposition, perc,w,'FaceColor',pars.experimentConditions_color{condInd});
-    %plot the trending line
-    %barposition = 1:numel(xdata);
-    plot_id(plotInd) = plot(barposition, xdata, 'Linewidth', 1, 'Color',pars.experimentConditions_color{condInd});
-    hold on;
-end
-
-xlim(xl*barinterv);
-graph_c.Position(1) = graph1.Position(1);
-graph_c.Position(3) = graph1.Position(3);
-ylim([0,1]);
-
-ylabel('Normalized averaged indices');
-
-set(gca,'Xtick', barposition, 'XtickLabel',segmentNames(dendr_perm),'FontAngle','italic');
-set(gca,'XTickLabelRotation',-25);
-set(gca,'Ytick', [0:0.2:1]);
-
-% another plot which plot the none normalized averaged roc value.
-graph_c = subplot(4,2,7);
-celltype = pars.celltype;
-for condInd = 1:numel(experimentConditions)
-    plotInd = plotInd + 1;
-    w = 0.05;
-    color = [0 0.7 0.7];
-    xdata = areas_indices_mean(dendr_perm,condInd);
-    percCoord = xdata;
-    barInd(condInd) = plotInd;
-    color_star = [1 0 0];
-    barposition = (barinterv)*(1:numel(xdata))+numel(experimentConditions)-condInd;
-    %plot the trending line
-    plot_id(plotInd) = plot(barposition, xdata, 'Linewidth', 1, 'Color',pars.experimentConditions_color{condInd});
-    hold on;
-end
-
-xlim(xl*barinterv);
-graph_c.Position(1) = graph1.Position(1);
-graph_c.Position(3) = graph1.Position(3);
-
-ylim([0,0.4]); 
-
-legend(plot_id(barInd),pars.legend,'Location','northwest');
-ylabel('Averaged indices');
-xlabel('Segment Names');
-
-set(gca,'Xtick', barposition, 'XtickLabel',segmentNames(dendr_perm),'FontAngle','italic');
-set(gca,'XTickLabelRotation',-25);
-set(gca,'Ytick', [0:0.2:1]);
+% plotInd = 0;
+% barInd = zeros(1,numel(experimentConditions));
+% clear plot_id;
+% 
+% % normalize the mean of the indices
+% if pars.normalize
+%     areas_indices_mean_n2 = (areas_indices_mean-min(areas_indices_mean,[],1))./(max(areas_indices_mean,[],1)-min(areas_indices_mean,[],1));
+% else
+%     areas_indices_mean_n2 = areas_indices_mean;
+% end
+% celltype = pars.celltype;
+% graph_c = subplot(4,2,5);
+% for condInd = 1:numel(experimentConditions)
+%     plotInd = plotInd + 1;
+%     w = 0.05;
+%     color = [0 0.7 0.7];
+%     xdata = areas_indices_mean_n2(dendr_perm,condInd);
+%     percCoord = xdata;
+%     barInd(condInd) = plotInd;
+%     color_star = [1 0 0];
+%     barposition = (barinterv)*(1:numel(xdata))+numel(experimentConditions)-condInd;
+%     %plot_id(plotInd) = barh(barposition, perc,w,'FaceColor',pars.experimentConditions_color{condInd});
+%     %plot the trending line
+%     %barposition = 1:numel(xdata);
+%     plot_id(plotInd) = plot(barposition, xdata, 'Linewidth', 1, 'Color',pars.experimentConditions_color{condInd});
+%     hold on;
+% end
+% 
+% xlim(xl*barinterv);
+% graph_c.Position(1) = graph1.Position(1);
+% graph_c.Position(3) = graph1.Position(3);
+% ylim([0,1]);
+% 
+% ylabel('Normalized averaged indices');
+% 
+% set(gca,'Xtick', barposition, 'XtickLabel',segmentNames(dendr_perm),'FontAngle','italic');
+% set(gca,'XTickLabelRotation',-25);
+% set(gca,'Ytick', [0:0.2:1]);
+% 
+% % another plot which plot the none normalized averaged roc value.
+% graph_c = subplot(4,2,7);
+% celltype = pars.celltype;
+% for condInd = 1:numel(experimentConditions)
+%     plotInd = plotInd + 1;
+%     w = 0.05;
+%     color = [0 0.7 0.7];
+%     xdata = areas_indices_mean(dendr_perm,condInd);
+%     percCoord = xdata;
+%     barInd(condInd) = plotInd;
+%     color_star = [1 0 0];
+%     barposition = (barinterv)*(1:numel(xdata))+numel(experimentConditions)-condInd;
+%     %plot the trending line
+%     plot_id(plotInd) = plot(barposition, xdata, 'Linewidth', 1, 'Color',pars.experimentConditions_color{condInd});
+%     hold on;
+% end
+% 
+% xlim(xl*barinterv);
+% graph_c.Position(1) = graph1.Position(1);
+% graph_c.Position(3) = graph1.Position(3);
+% 
+% ylim([0,0.4]); 
+% 
+% legend(plot_id(barInd),pars.legend,'Location','northwest');
+% ylabel('Averaged indices');
+% xlabel('Segment Names');
+% 
+% set(gca,'Xtick', barposition, 'XtickLabel',segmentNames(dendr_perm),'FontAngle','italic');
+% set(gca,'XTickLabelRotation',-25);
+% set(gca,'Ytick', [0:0.2:1]);
 
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);

@@ -113,16 +113,16 @@ for xxx = 1:numel(flipsign_set)
     %text
     nsubplot(plot_nrow, plot_ncol, (xxx-1)+plot_positiony{6}, plot_positionx{6});
     p = ranksum(indices.pred_vs_unpred_fam(NovelInhibited), indices.pred_vs_unpred_fam(NotNoveltySelective));
-    text(0,1, ['p inhibited vs other (surprise) = ' mat2str(p, 4)]);
+    text(0,0, ['p inhibited vs other (surprise) = ' mat2str(p, 4)]);
     p = ranksum(indices.recency_ind(NovelInhibited), indices.recency_ind(NotNoveltySelective));
-    text(0,2, ['p inhibited vs other (recency) = ' mat2str(p, 4)]);
+    text(0,1, ['p inhibited vs other (recency) = ' mat2str(p, 4)]);
     p = ranksum(indices.pred_vs_unpred_fam(NovelExcited), indices.pred_vs_unpred_fam(NotNoveltySelective));
-    text(0,3, ['p excited vs other (surprise) = ' mat2str(p, 4)]);
+    text(0,2, ['p excited vs other (surprise) = ' mat2str(p, 4)]);
     p = ranksum(indices.recency_ind(NovelExcited), indices.recency_ind(NotNoveltySelective));
-    text(0,4, ['p excited vs other (recency) = ' mat2str(p, 4)]);
+    text(0,3, ['p excited vs other (recency) = ' mat2str(p, 4)]);
     
     ylim([0,5]);
-    text(0,0, ['sign flipped: ' mat2str(flipsign)]);
+    text(0,4, ['sign flipped: ' mat2str(flipsign)], 'FontSize', 14, 'Color', 'r');
     axis off
     
 end

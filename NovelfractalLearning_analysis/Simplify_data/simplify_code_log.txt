@@ -9,3 +9,11 @@ Main figure for brain area?
 %% make the nsuplot input parameter smaller:
 Sampleneuron, SDF_plot_Crossvalidation, SDF_Crossvalidation_infonewtask:
 Can't test the code because there is no SDFs, remain unchanged for now.
+
+Check the additional analysis, does it give the right plot when remake the structs?
+
+% To do, use sampleneuron as example to do the indices calculation.
+
+% To do: text whether the number of neuronlist and that sum in the files are the same?
+
+% To do: (index-0.5)*2

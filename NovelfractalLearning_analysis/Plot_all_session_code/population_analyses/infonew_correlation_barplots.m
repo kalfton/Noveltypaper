@@ -14,9 +14,9 @@ plotplacesetx = {1, 2, 3, 4, 1, 2};
 
 Include_type = 'Noveltyexcited'; %'Noveltyexcited' or 'Noveltyinhibited';% 
 if strcmpi(Include_type, 'Noveltyexcited')
-    Include_neurons = find([Neuronlist_good(:).P_pred_nov_vs_fam]<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]>0 & ~isnan([Neuronlist_good(:).rewardvalueindex_precue]));
+    Include_neurons = find([Neuronlist_all(:).P_pred_nov_vs_fam]<StatisticalThreshold & [Neuronlist_all(:).pred_nov_vs_fam]>0 & ~isnan([Neuronlist_all(:).rewardvalueindex_precue]));
 elseif strcmpi(Include_type, 'Noveltyinhibited')
-    Include_neurons = find([Neuronlist_good(:).P_pred_nov_vs_fam]<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]<0 & ~isnan([Neuronlist_good(:).rewardvalueindex_precue]));
+    Include_neurons = find([Neuronlist_all(:).P_pred_nov_vs_fam]<StatisticalThreshold & [Neuronlist_all(:).pred_nov_vs_fam]<0 & ~isnan([Neuronlist_all(:).rewardvalueindex_precue]));
 else
     error('invalide Include type');
 end
@@ -34,7 +34,7 @@ sig_percent_vals = zeros(size(Pvaluenames));
 p_binomial_vals = zeros(size(Pvaluenames));
 error_bar_vals = zeros(size(Pvaluenames));
 for xyw = 1:numel(Pvaluenames)
-    Pvalues = [Neuronlist_good(:).(Pvaluenames{xyw})];
+    Pvalues = [Neuronlist_all(:).(Pvaluenames{xyw})];
     Pvalues = Pvalues(~isnan(Pvalues));
     sig_num = sum(Pvalues<StatisticalThreshold);
     total_num = sum(~isnan(Pvalues));
@@ -67,8 +67,8 @@ corrstd = zeros(size(corr_permutexy));
 corr_n = zeros(size(corr_permutexy));
 for xyw = 1: numel(corr_permutexy)
     
-    xaxis_ind =  [Neuronlist_good(:).(indices_for_plot{corr_permutexy{xyw}(1)})]';
-    yaxis_ind =  [Neuronlist_good(:).(indices_for_plot{corr_permutexy{xyw}(2)})]';
+    xaxis_ind =  [Neuronlist_all(:).(indices_for_plot{corr_permutexy{xyw}(1)})]';
+    yaxis_ind =  [Neuronlist_all(:).(indices_for_plot{corr_permutexy{xyw}(2)})]';
     
     xaxis_ind = xaxis_ind(Include_neurons);
     yaxis_ind = yaxis_ind(Include_neurons);
@@ -133,10 +133,10 @@ ytext = 0;
 for ii=1:numel(Corrset1)
     for jj = 1:numel(Corrset2)
         
-        xaxis_ind1 = [Neuronlist_good(Include_neurons).(indices_for_plot{Corrset1{ii}(1)})];
-        yaxis_ind1 = [Neuronlist_good(Include_neurons).(indices_for_plot{Corrset1{ii}(2)})];
-        xaxis_ind2 = [Neuronlist_good(Include_neurons).(indices_for_plot{Corrset2{jj}(1)})];
-        yaxis_ind2 = [Neuronlist_good(Include_neurons).(indices_for_plot{Corrset2{jj}(2)})];
+        xaxis_ind1 = [Neuronlist_all(Include_neurons).(indices_for_plot{Corrset1{ii}(1)})];
+        yaxis_ind1 = [Neuronlist_all(Include_neurons).(indices_for_plot{Corrset1{ii}(2)})];
+        xaxis_ind2 = [Neuronlist_all(Include_neurons).(indices_for_plot{Corrset2{jj}(1)})];
+        yaxis_ind2 = [Neuronlist_all(Include_neurons).(indices_for_plot{Corrset2{jj}(2)})];
         
         
         % exclude the nan index

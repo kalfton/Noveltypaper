@@ -1,7 +1,5 @@
 %% This script is for inter-region comparison
 
-monkeyNames = ["Lemmy","Slayer","Combined"];
-
 pars.sigThres = 0.01;
 pars.tableColor_low = 0.001;
 pars.tableColor_mid = 0.01;
@@ -21,8 +19,6 @@ pars.include_region = {'AVMTE', '9/46V', 'Basal forebrain', 'Amygdala',...
     '6DC', '6DR', 'ACC', '4'};
 pars.celltype = {'positive', 'negative','selective'};
 
-monkeyName = 'Combined'; % 'Slayer','Lemmy'
-
 pars.StatisticalThreshold=0.01;
 pars.celltype = {'positive', 'negative','selective'};
 pars.applyCellThreshold = 1;
@@ -40,24 +36,13 @@ correlation_legend = {'Novelty & Surprise', 'Novelty & Recency', 'Novelty & viol
 pars.correlation_color = {'b','g',[0.8,0.2,0.8]};
 minmum_num = 10; % if an area has neuron number less than this, exclude it.
 
-%%
-switch monkeyName
-    case 'Lemmy'
-        tempIndices = find([Neuronlist_good.MonkeyID]== 2);
-        Neuronlist_good = Neuronlist_good(tempIndices);
-    case 'Slayer'
-        tempIndices = find([Neuronlist_good.MonkeyID]== 1);
-        Neuronlist_good = Neuronlist_good(tempIndices);
-    case 'Combined'
-        
-end
 
 experimentConditions = pars.experimentConditions;
 StatisticalThreshold = pars.StatisticalThreshold;
 
 
 %% count the percentage of neurons and raw numbers in each brain area.
-[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_good, pars);
+[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_all, pars);
 segmentNames = segmentmap(:,1);
 %%
 allRegionsCells = neuron_counts.allRegionsCells;
@@ -156,14 +141,14 @@ for condind = 1:numel(conditionnames)
 end
 
 %% save the novelty/sensory surprise/recency indice of each neuron by brain areas
-cells_areas = [Neuronlist_good.(pars.anatomyCase)];
+cells_areas = [Neuronlist_all.(pars.anatomyCase)];
 areas_indices = cell(numel(segmentNames),1);
 areas_indices_mean = zeros(numel(segmentNames),3);
 for segmentInd = 1:numel(segmentNames)
     currentCells = ismember(cells_areas, segmentmap{segmentInd,2});
     for jj = 1:3 %novelty/sensory surprise/recency
-        areas_indices{segmentInd}(:,end+1) = abs([Neuronlist_good(currentCells).(pars.experimentindices{jj})]);
-        areas_indices_mean(segmentInd, jj) = mean(abs([Neuronlist_good(currentCells).(pars.experimentindices{jj})]));
+        areas_indices{segmentInd}(:,end+1) = abs([Neuronlist_all(currentCells).(pars.experimentindices{jj})]);
+        areas_indices_mean(segmentInd, jj) = mean(abs([Neuronlist_all(currentCells).(pars.experimentindices{jj})]));
     end
     clear currentCells;
 end
@@ -189,76 +174,6 @@ graph1 = subplot(4,2,[1,3]);
 [plotobj, ~, dendr_perm] = dendrogram(hierachy_cluster, 'Labels', segmentNames);
 set(gca,'XTickLabelRotation',-25);
 xl = xlim;
-
-% plotInd = 0;
-% barInd = zeros(1,numel(experimentConditions));
-% clear plot_id;
-% 
-% % normalize the mean of the indices
-% if pars.normalize
-%     areas_indices_mean_n2 = (areas_indices_mean-min(areas_indices_mean,[],1))./(max(areas_indices_mean,[],1)-min(areas_indices_mean,[],1));
-% else
-%     areas_indices_mean_n2 = areas_indices_mean;
-% end
-% celltype = pars.celltype;
-% graph_c = subplot(4,2,5);
-% for condInd = 1:numel(experimentConditions)
-%     plotInd = plotInd + 1;
-%     w = 0.05;
-%     color = [0 0.7 0.7];
-%     xdata = areas_indices_mean_n2(dendr_perm,condInd);
-%     percCoord = xdata;
-%     barInd(condInd) = plotInd;
-%     color_star = [1 0 0];
-%     barposition = (barinterv)*(1:numel(xdata))+numel(experimentConditions)-condInd;
-%     %plot_id(plotInd) = barh(barposition, perc,w,'FaceColor',pars.experimentConditions_color{condInd});
-%     %plot the trending line
-%     %barposition = 1:numel(xdata);
-%     plot_id(plotInd) = plot(barposition, xdata, 'Linewidth', 1, 'Color',pars.experimentConditions_color{condInd});
-%     hold on;
-% end
-% 
-% xlim(xl*barinterv);
-% graph_c.Position(1) = graph1.Position(1);
-% graph_c.Position(3) = graph1.Position(3);
-% ylim([0,1]);
-% 
-% ylabel('Normalized averaged indices');
-% 
-% set(gca,'Xtick', barposition, 'XtickLabel',segmentNames(dendr_perm),'FontAngle','italic');
-% set(gca,'XTickLabelRotation',-25);
-% set(gca,'Ytick', [0:0.2:1]);
-% 
-% % another plot which plot the none normalized averaged roc value.
-% graph_c = subplot(4,2,7);
-% celltype = pars.celltype;
-% for condInd = 1:numel(experimentConditions)
-%     plotInd = plotInd + 1;
-%     w = 0.05;
-%     color = [0 0.7 0.7];
-%     xdata = areas_indices_mean(dendr_perm,condInd);
-%     percCoord = xdata;
-%     barInd(condInd) = plotInd;
-%     color_star = [1 0 0];
-%     barposition = (barinterv)*(1:numel(xdata))+numel(experimentConditions)-condInd;
-%     %plot the trending line
-%     plot_id(plotInd) = plot(barposition, xdata, 'Linewidth', 1, 'Color',pars.experimentConditions_color{condInd});
-%     hold on;
-% end
-% 
-% xlim(xl*barinterv);
-% graph_c.Position(1) = graph1.Position(1);
-% graph_c.Position(3) = graph1.Position(3);
-% 
-% ylim([0,0.4]); 
-% 
-% legend(plot_id(barInd),pars.legend,'Location','northwest');
-% ylabel('Averaged indices');
-% xlabel('Segment Names');
-% 
-% set(gca,'Xtick', barposition, 'XtickLabel',segmentNames(dendr_perm),'FontAngle','italic');
-% set(gca,'XTickLabelRotation',-25);
-% set(gca,'Ytick', [0:0.2:1]);
 
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);

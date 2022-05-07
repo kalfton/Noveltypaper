@@ -2,24 +2,22 @@ close all;
 %shuffling_num = 10000;
 run_longtimebootstrapping = 0;
 % 
-%Slayer
-fractalIDset_Slayer = {6300:6303, 7999, [7410:7411,7420:7421], [7412,7422,7413,7423, 7414,7424, 7415,7425]};
-logical_Slayer = cellfun(@(x) (strcmpi(x ,'Slayer')), {Neuronlist_good(:).monkeyName})';
-%Lemmy
-fractalIDset_Lemmy = {6300:6307, 7999, [7300:7307], [7410:7411,7420:7421]};
-logical_Lemmy = cellfun(@(x) (strcmpi(x ,'Lemmy')), {Neuronlist_good(:).monkeyName})';
+%Monkey S
+fractalIDset_S = {6300:6303, 7999, [7410:7411,7420:7421], [7412,7422,7413,7423, 7414,7424, 7415,7425]};
+%Monkey L
+fractalIDset_L = {6300:6307, 7999, [7300:7307], [7410:7411,7420:7421]};
 
 % choose the neurons in the sessions which has multiday fractal
-logical_multiday = cellfun(@(x) ~isempty(x.('FR7410')) | ~isempty(x.('FR7411')), {Neuronlist_good(:).learning})';
-logical_multiday = logical_multiday & cellfun(@(x) (numel(x.('learningdate'))==5 || numel(x.('learningdate'))==1 && x.('learningdate')>1), {Neuronlist_good(:).learning})';
+logical_multiday = cellfun(@(x) ~isempty(x.('FR7410')) | ~isempty(x.('FR7411')), {Neuronlist_all(:).learning})';
+logical_multiday = logical_multiday & cellfun(@(x) (numel(x.('learningdate'))==5 || numel(x.('learningdate'))==1 && x.('learningdate')>1), {Neuronlist_all(:).learning})';
 logical_multiday = logical_multiday;
 
 %%
 %% repeating novel fractals plot by presentation number.
 
-logical_for_neuronlist = {[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'>0 & logical_multiday
+logical_for_neuronlist = {[Neuronlist_all(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_all(:).pred_nov_vs_fam]'>0 & logical_multiday
      };
-    %[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'<0  & logical_multiday
+    %[Neuronlist_all(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_all(:).pred_nov_vs_fam]'<0  & logical_multiday
 
 
 Select_criteria = {'Nov excited', 'Nov Inhibited'};
@@ -31,14 +29,14 @@ exp_paras_names = {'exp_paras_FL', 'exp_paras_NL', 'exp_paras_L1', 'exp_paras_L2
 for xy = 1:numel(logical_for_neuronlist) % novelty excited, inhibited
     
 
-Neuronlist_learning = Neuronlist_good(logical_for_neuronlist{xy});
+Neuronlist_learning = Neuronlist_all(logical_for_neuronlist{xy});
 num = sum(logical_for_neuronlist{xy});
 figure;
 set(gcf,'Position',[100 100 1100 800],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
 nsubplot(3,3,1,1);
 hold on;
 % initialize
-fractalIDset = fractalIDset_Slayer; % default
+fractalIDset = fractalIDset_S; % default
 for xxx = 1:length(fractalIDset)
     eval([Regression_x_names{xxx} ' = [];']);
     eval([All_FR_names{xxx} ' = [];']);
@@ -49,10 +47,10 @@ for xxx = 1:length(fractalIDset)
     Regression_x = [];
     All_FR = [];
     for iii = 1:length(Neuronlist_learning)
-        if strcmpi(Neuronlist_learning(iii).monkeyName, 'Lemmy')
-            fractalIDset = fractalIDset_Lemmy;
-        elseif strcmpi(Neuronlist_learning(iii).monkeyName, 'Slayer')
-            fractalIDset = fractalIDset_Slayer;
+        if strcmpi(Neuronlist_learning(iii).monkeyName, 'L')
+            fractalIDset = fractalIDset_L;
+        elseif strcmpi(Neuronlist_learning(iii).monkeyName, 'S')
+            fractalIDset = fractalIDset_S;
         end
         
         for ii = 1:length(fractalIDset{xxx})
@@ -172,8 +170,8 @@ else
     %% batch the bootstrapping on server
     
     pars.shuffling_num = shuffling_num;
-    pars.fractalIDset_Slayer = fractalIDset_Slayer;
-    pars.fractalIDset_Lemmy = fractalIDset_Lemmy;
+    pars.fractalIDset_S = fractalIDset_S;
+    pars.fractalIDset_L = fractalIDset_L;
     pars.maxappearance = max(Regression_L1_x);
     pars.smoothfun = smoothfun;
     

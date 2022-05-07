@@ -7,13 +7,22 @@ end
 Main figure for brain area?
 
 %% make the nsuplot input parameter smaller:
-Sampleneuron, SDF_plot_Crossvalidation, SDF_Crossvalidation_infonewtask:
-Can't test the code because there is no SDFs, remain unchanged for now.
 
-Check the additional analysis, does it give the right plot when remake the structs?
+Check the additional analysis, does it give the right plot when remake the structs?(Yes)
 
-% To do, use sampleneuron as example to do the indices calculation.
+% To do, use sampleneuron as example to do the indices calculation.(Done)
 
-% To do: text whether the number of neuronlist and that sum in the files are the same?
+% To do: Include more fields in the single session neuronlist: additional analyses need those.
 
-% To do: (index-0.5)*2
+$ Why the total neuron number in the neuronlist_all(n=17749) are different from the one that counts each file(n = 17798)
+ separately?(done, because we also used the exclusion criterion in infonew task)
+
+To do: change the field content in the filename(done)
+
+To do: Add error message for unable to find raw data.
+
+To do: Neuronlist_good-> Neuronlist_all
+
+To do: Check why learning_ind is in the struct array, and same for "acrossdayforgetroc"
+
+

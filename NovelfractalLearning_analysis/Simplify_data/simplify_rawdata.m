@@ -10,27 +10,43 @@ filepath = 'Y:\PLEXON_GRAYARRAY_Slayer\NovelFractalLearning_Slayer_combinedsorti
 DDD = dir(fullfile(filepath,'*tasksession_mega_file.mat'));
 % new file location:
 filesavepath = 'Y:\PLEXON_GRAYARRAY_Slayer\NovelFractalLearning_Slayer_for_share';
-% %Lemmy
+%Lemmy
 % filepath = 'Y:\PLEXON_GRAYARRAY_LEMMY\NovelfractalLearning_Lemmy_combinedsorting';
 % DDD = dir(fullfile(filepath,'*tasksession_mega_file.mat'));
 % %  new file location:
 % filesavepath = 'Y:\PLEXON_GRAYARRAY_LEMMY\NovelfractalLearning_Lemmy_for_share';
 
+% load the neuronlist that combines the infotask result
+
+load(fullfile('Y:\Kaining\NovelfractalLearning_analysis\NovelfractalLearning_analysis\Plot_all_session_code','neuronliststruct_all'), 'Neuronlist_good');
+filenamelist = {Neuronlist_good.filename};
+
+%sum of the neurons
+n_neurons = 0;
 
 for ii = 1:numel(DDD)
+    %profile on
     clear Generaltask SPK* Crossval_neuronlist Neuronlist
     load(fullfile(DDD(ii).folder, DDD(ii).name), 'Generaltask', 'SPK*', 'Crossval_neuronlist');
     
     Neuronlist = Crossval_neuronlist{1,1};
     allfieldnames = fieldnames(Neuronlist);
-    fieldname_2_include = {'name';'electrodeID'; 'ISIviolationrate'; 'unitQuality'; 'contaminationRate'; 'exclude'};    
+    fieldname_2_include = {'name';'electrodeID'; 'ISIviolationrate'; 'unitQuality'; 'contaminationRate'; 'exclude';...
+        'recency_ind_match_pos'; 'P_recency_ind_match_pos'; 'pred_nov_vs_fam'; 'P_pred_nov_vs_fam'; 'pred_vs_unpred_fam'; 'P_pred_vs_unpred_fam_perm';...
+        'All_Fractal_FR'};    
     fieldname_2_remove = setdiff(allfieldnames, fieldname_2_include);
     % Save minimum info in Neuronlist
-    Neuronlist([Neuronlist.exclude]==1)=[];
     Neuronlist = rmfield(Neuronlist,fieldname_2_remove);
+    % Remove the excluded neurons
+    currentfileInd = strcmp(filenamelist, DDD(ii).name);
+    Neuronlist_local = Neuronlist_good(currentfileInd);
+    good_neuron = {Neuronlist_local.name};
+    good_ind = contains({Neuronlist.name}, good_neuron);
+    Neuronlist = Neuronlist(good_ind);
+    %Neuronlist([Neuronlist.exclude]==1)=[];
     
     
-    % Save minimum info in Generaltask too
+    % Save minimum info in Generaltask
     fieldname_2_include_Generaltask = {'trialstart'; 'trialend'; 'successtrial'; 'successtrstart'; 'trialtype';...
         'trialnumber'; 'timetargeton'; 'Set'; 'timetargetoff'; 'timefpon'; 'timefpoff'; 'rewardeliver'; 'rewfixangle';...
         'fixacq'; 'b_error_place';  'novelfractaldate'; 'Fractals'};
@@ -60,9 +76,22 @@ for ii = 1:numel(DDD)
     
     % Check that the Neuronlist matches the SPK to be saved.
     assert(numel(who('SPK*'))==numel(Neuronlist), 'The Neuronlist do not match the raw neurons')
+    
+    old_filename = DDD(ii).name;
+    endind = strfind(old_filename,'_tasksession')-1;
+    startind = 10;
+    new_filename = ['task_session_', old_filename(startind:endind) '.mat'];
+    
     if numel(who('SPK*'))>0
-        save(fullfile(filesavepath, DDD(ii).name), 'Generaltask', 'SPK*', 'Neuronlist');
+        save(fullfile(filesavepath, new_filename), 'Generaltask', 'SPK*', 'Neuronlist');
     else
-        save(fullfile(filesavepath, DDD(ii).name), 'Generaltask', 'Neuronlist');
+        save(fullfile(filesavepath, new_filename), 'Generaltask', 'Neuronlist');
     end
+    
+    n_neurons = n_neurons+numel(Neuronlist);
+    %profile viewer
 end
+
+disp(n_neurons);
+
+% To do: replace the Monkey/human names in the filename with "Task_Session"

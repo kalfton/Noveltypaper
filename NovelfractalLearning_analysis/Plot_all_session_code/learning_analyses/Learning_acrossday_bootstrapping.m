@@ -1,8 +1,8 @@
 % bootstrapping of Learning appearance by appearance plot.
 function datastruct = Learning_acrossday_bootstrapping(Neuronlist_learning,pars)
 shuffling_num = pars.shuffling_num;
-fractalIDset_Slayer = pars.fractalIDset_Slayer;
-fractalIDset_Lemmy = pars.fractalIDset_Lemmy;
+fractalIDset_S = pars.fractalIDset_S;
+fractalIDset_L = pars.fractalIDset_L;
 smoothfun = pars.smoothfun;
 maxappearance = pars.maxappearance;
 %% batch the bootstrapping on server
@@ -33,10 +33,10 @@ parfor xyz = 1:shuffling_num
         Regression_x = [];
         All_FR = [];
         for iii = 1:length(Neuronlist_learning)
-            if strcmpi(Neuronlist_learning(Randind(iii)).monkeyName, 'Lemmy')
-                fractalIDset = fractalIDset_Lemmy;
-            elseif strcmpi(Neuronlist_learning(Randind(iii)).monkeyName, 'Slayer')
-                fractalIDset = fractalIDset_Slayer;
+            if strcmpi(Neuronlist_learning(Randind(iii)).monkeyName, 'L')
+                fractalIDset = fractalIDset_L;
+            elseif strcmpi(Neuronlist_learning(Randind(iii)).monkeyName, 'S')
+                fractalIDset = fractalIDset_S;
             end
             
             for ii = 1:length(fractalIDset{xxx})

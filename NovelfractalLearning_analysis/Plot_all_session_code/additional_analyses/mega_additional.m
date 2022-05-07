@@ -1,12 +1,12 @@
 % An infra structure script which integrates all the analysis for reviewer.
-addpath('..\utils');
-addpath('..\help_func');
+% addpath('..\utils');
+% addpath('..\help_func');
 rng(0);
 DDD=[];
-datapath = 'Y:\PLEXON_GRAYARRAY_Slayer\NovelFractalLearning_Slayer_combinedsorting';
-DDD = dir(fullfile(datapath,'*tasksession_mega_file.mat'));
-datapath = 'Y:\PLEXON_GRAYARRAY_LEMMY\NovelfractalLearning_Lemmy_combinedsorting';
-DDD = [DDD; dir(fullfile(datapath,'*tasksession_mega_file.mat'))];
+datapath = '.\raw_data\Monkey_L_raw';
+DDD = dir(fullfile(datapath,'*.mat'));
+datapath = '.\raw_data\Monkey_S_raw';
+DDD = [DDD; dir(fullfile(datapath,'*.mat'))];
 
 %plotpath = '.\plots';
 
@@ -18,27 +18,19 @@ if generate_new_data
     classifer_obj = novelty_classifier_class();
     noise_corr_obj = noise_correlation_class('noveltyresponsive');
     
+    if isempty(DDD)
+        error('Raw data is needed for this calculation');
+    end
     
+    neuron_n = 0; % count the neuron number
     for fileID = 1:length(DDD)
         clear Generaltask Crossval_neuronlist
         filename = DDD(fileID).name;
         datapath = DDD(fileID).folder;
         
-        load(fullfile(datapath, filename),'Generaltask');
+        load(fullfile(datapath, filename),'Generaltask', 'Neuronlist');
+        neuron_n = neuron_n+numel(Neuronlist);
         
-        load(fullfile(datapath, filename),'Crossval_neuronlist');
-        Neuronlist = Crossval_neuronlist{1,1};
-        
-        % fixation anaylsis here
-        clear AI04;
-        load(fullfile(datapath, filename),'AI04');
-        pupilchannel = AI04;
-        
-        if contains(datapath, 'Lemmy', 'IgnoreCase', true)
-            Monkey = 'Lemmy';
-        elseif contains(datapath, 'Slayer', 'IgnoreCase', true)
-            Monkey = 'Slayer';
-        end
         
         % Check whether there are valid neurons in the session
         if nnz(contains({Neuronlist.name}, 'SPK') & [Neuronlist.exclude]==0)<1
@@ -56,7 +48,8 @@ if generate_new_data
         
         fprintf('%d files done\n', fileID);
     end
-    
+    disp('Total number of neurons:');
+    disp(neuron_n);
     % save the data for later quicker use
     propertyname = properties(fixation_obj);
     fixation_struct = struct(); %use a struct to store the information

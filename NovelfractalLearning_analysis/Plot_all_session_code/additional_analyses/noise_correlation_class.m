@@ -6,7 +6,7 @@ classdef noise_correlation_class < handle
         res_var_curves_f = [];
         res_var_curves_1 = [];
         included_neuron = [];
-        monkey_name = {};
+        %monkey_name = {};
         
         var_nov_ax = [];
         var_rand_ax = [];
@@ -58,7 +58,7 @@ classdef noise_correlation_class < handle
         
         
         function noise_correlation_singlesession(obj, Generaltask, Neuronlist)
-            obj.monkey_name{end+1,1} = Neuronlist(1).monkeyName;
+            %obj.monkey_name{end+1,1} = Neuronlist(1).monkeyName;
             Channelnames = {Neuronlist.name};
             % only include SPK
             Neuronlist_sub = Neuronlist(contains(Channelnames, 'SPK') & [Neuronlist.exclude]==0);
@@ -186,25 +186,26 @@ classdef noise_correlation_class < handle
         
         
         function noise_correlation_analysis(obj, path, varargin)
-            normal = 0; % normalizing?
-            Monkey = 'Combine';
+%             normal = 0; % normalizing?
+%             Monkey = 'Combine';
+%             
+%             tempInd = find(strcmpi(varargin, 'normalize'),1);
+%             if ~isempty(tempInd)
+%                 normal = varargin{tempInd+1};
+%             end
+%             
+%             tempInd = find(strcmpi(varargin, 'Monkey'),1);
+%             if ~isempty(tempInd)
+%                 Monkey = varargin{tempInd+1};
+%             end
             
-            tempInd = find(strcmpi(varargin, 'normalize'),1);
-            if ~isempty(tempInd)
-                normal = varargin{tempInd+1};
-            end
+%             if strcmpi(Monkey, 'Combine')
+%                 included = true(size(obj.monkey_name));%true(size(obj.corrmean_all,1),1);
+%             else
+%                 included = strcmpi(obj.monkey_name, Monkey);
+%             end
             
-            tempInd = find(strcmpi(varargin, 'Monkey'),1);
-            if ~isempty(tempInd)
-                Monkey = varargin{tempInd+1};
-            end
-            
-            if strcmpi(Monkey, 'Combine')
-                included = true(size(obj.monkey_name));%true(size(obj.corrmean_all,1),1);
-            else
-                included = strcmpi(obj.monkey_name, Monkey);
-            end
-            
+            included = true(size(obj.corrmean_all,1),1);
             
             figure
             nsubplot(2, 2, 1, 1);

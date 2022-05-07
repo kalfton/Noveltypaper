@@ -6,7 +6,8 @@ primate brain"*](https://www.cell.com/current-biology/pdfExtended/S0960-9822(22)
 To run the analyses and generate the figures in the paper, just run the MATLAB script "Mega_script.m".
 The output result plots are saved under the folder "plots".
 
-To plot most of the analysis in the paper, the data in the "maindata" folder is enough. The two .mat files each contain a struct array for each animal, and in the struct array, each item contains the precalculated results of one neuron.
+
+To plot most of the analysis in the paper, the data in the "maindata" folder is enough. The two .mat files each contain a struct array (Neuronlist_\*) for each animal, and in the struct array, each item contains the precalculated results of one neuron.
 
 Key fields in the Neuronlist: 
 
@@ -48,7 +49,7 @@ Key fields in the Neuronlist:
 |'learningforgetinganalysis'  | criterion to be included in the learning-forgetting correlation analysis |
 
 </br></br>
-The raw neuronal spike data can be downloaded here: https://wustl.box.com/s/v4x3zjvyopexyud3ghnk87apav9ma6ay
+The raw neuronal spike data can be downloaded [here](https://wustl.box.com/s/v4x3zjvyopexyud3ghnk87apav9ma6ay).
 
 Each raw file (task_session_\*.mat) is a recording session, and it contains several struct variables, The struct variables whose names look like 'SPK*' contain the sorted neuron's information in each session. The information includes the neuron's spike time point in each trial (field name: sptimes) and each fractal object (field name: fracsptimes). 
 
@@ -73,3 +74,4 @@ Key fields in the Generaltask:
 |'Fractals' | It is a 5 by m matrix, where m is the total number of fractal objects in the session. The first row is fractal ID. The second row is the trial type that the fractal is in, with the same convention as 'trialtype' field. The third row is the fractal position in the sequence. The fourth row is the fractal appearing time. The fifth row is the object disappearing time. |
 
 To run the code "sampleneuron.m" and "Sampleneuron_for_learning.m", the raw data is needed and should be put under the "Plot_all_session_code/raw_data/" directory.
+

@@ -1,18 +1,18 @@
 %% Across day bar plots
 % choose the neurons in the session which has multiday fractal
-logical_multiday = cellfun(@(x) ~isempty(x.('FR7410')) | ~isempty(x.('FR7411')), {Neuronlist_good(:).learning})';
-logical_multiday = logical_multiday & cellfun(@(x) (numel(x.('learningdate'))==5 || numel(x.('learningdate'))==1 && x.('learningdate')>1), {Neuronlist_good(:).learning})';
+logical_multiday = cellfun(@(x) ~isempty(x.('FR7410')) | ~isempty(x.('FR7411')), {Neuronlist_all(:).learning})';
+logical_multiday = logical_multiday & cellfun(@(x) (numel(x.('learningdate'))==5 || numel(x.('learningdate'))==1 && x.('learningdate')>1), {Neuronlist_all(:).learning})';
 logical_multiday = logical_multiday;
 
-logical_for_neuronlist = {[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'>0 & logical_multiday
+logical_for_neuronlist = {[Neuronlist_all(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_all(:).pred_nov_vs_fam]'>0 & logical_multiday
     };
-    %[Neuronlist_good(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]'<0 & logical_multiday
+    %[Neuronlist_all(:).P_pred_nov_vs_fam]'<StatisticalThreshold & [Neuronlist_all(:).pred_nov_vs_fam]'<0 & logical_multiday
 Select_criteria = {'Novelty excited', 'Novelty inhibited'};
 variablenames = {'Learning_1day', 'Learning_2day'};
 appearnum = 5;
 
 for xy = 1: length(logical_for_neuronlist)
-Neuronlist_learning = Neuronlist_good(logical_for_neuronlist{xy});
+Neuronlist_learning = Neuronlist_all(logical_for_neuronlist{xy});
 Neuronum = sum(logical_for_neuronlist{xy});
 
 for i = 1:length(variablenames)
@@ -92,11 +92,11 @@ end
 
 %% surprise effect in learning
 figure;
-novelty_resp_logic = [Neuronlist_good(:).P_pred_nov_vs_fam]<StatisticalThreshold & [Neuronlist_good(:).pred_nov_vs_fam]>0 ...
-    & ~isnan([Neuronlist_good(:).learning_surprise])...
+novelty_resp_logic = [Neuronlist_all(:).P_pred_nov_vs_fam]<StatisticalThreshold & [Neuronlist_all(:).pred_nov_vs_fam]>0 ...
+    & ~isnan([Neuronlist_all(:).learning_surprise])...
     & logical_multiday';
 title(['Learning trial type testing surprise, n = ' mat2str(sum(novelty_resp_logic))]);
-learning_surprise = [Neuronlist_good(novelty_resp_logic).learning_surprise];
+learning_surprise = [Neuronlist_all(novelty_resp_logic).learning_surprise];
 
 
 Datamean = [mean(learning_surprise)];

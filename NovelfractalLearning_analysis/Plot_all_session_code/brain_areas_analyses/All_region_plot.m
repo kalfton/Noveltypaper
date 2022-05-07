@@ -22,7 +22,6 @@ pars.exclude_region = {'Claustrum', 'Zona Incerta'};
 pars.anatomyCase = 'regionIndex';
 pars.celltype = {'positive', 'negative','selective'};
 
-monkeyName = 'Combined'; % 'Slayer','Lemmy'
 correlation_pairs = {[1,2], [1,3], [1,4]};
 excludemua = true;
 createneuronlist = true;
@@ -38,24 +37,13 @@ correlation_legend = {'Novelty & Surprise', 'Novelty & Recency', 'Novelty & viol
 pars.correlation_color = {'b','g',[0.8,0.2,0.8]};
 minmum_num = 10; % if an area has neuron number less than this, exclude it.
 
-%%
-switch monkeyName
-    case 'Lemmy'
-        tempIndices = find([Neuronlist_good.MonkeyID]== 2);
-        Neuronlist_good = Neuronlist_good(tempIndices);
-    case 'Slayer'
-        tempIndices = find([Neuronlist_good.MonkeyID]== 1);
-        Neuronlist_good = Neuronlist_good(tempIndices);
-    case 'Combined'
-        
-end
 
 %% Ploting start here.
 experimentConditions = pars.experimentConditions;
 % load(fullfile('./brain_areas_analyses/segments','segmentmap.mat'));% load segmentNames
 
 %% count the percentage of neurons and raw numbers in each brain area.
-[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_good, pars);
+[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_all, pars);
 segmentNames = segmentmap(:,1);
 %%
 allRegionsCells = neuron_counts.allRegionsCells;
@@ -242,15 +230,15 @@ set(gca,'Xtick', [-100:20:100], 'xtickLabel',[100:-20:0,20:20:100]);
 currenttype = Noveltytypes{4};
 clear included_Ind included_Ind_pos included_Ind_neg
 if contains(currenttype, 'Nov_excited')
-    included_Ind = find([Neuronlist_good.P_pred_nov_vs_fam] <= StatisticalThreshold & [Neuronlist_good.pred_nov_vs_fam] >0 );
+    included_Ind = find([Neuronlist_all.P_pred_nov_vs_fam] <= StatisticalThreshold & [Neuronlist_all.pred_nov_vs_fam] >0 );
 elseif contains(currenttype, 'Nov_inhibited')
-    included_Ind = find([Neuronlist_good.P_pred_nov_vs_fam] <= StatisticalThreshold & [Neuronlist_good.pred_nov_vs_fam] <0 );
+    included_Ind = find([Neuronlist_all.P_pred_nov_vs_fam] <= StatisticalThreshold & [Neuronlist_all.pred_nov_vs_fam] <0 );
 elseif contains(currenttype, 'Novel_selective')
-    included_Ind_pos = find([Neuronlist_good.P_pred_nov_vs_fam] <= StatisticalThreshold & [Neuronlist_good.pred_nov_vs_fam] >0);
-    included_Ind_neg = find([Neuronlist_good.P_pred_nov_vs_fam] <= StatisticalThreshold & [Neuronlist_good.pred_nov_vs_fam] <0 );
+    included_Ind_pos = find([Neuronlist_all.P_pred_nov_vs_fam] <= StatisticalThreshold & [Neuronlist_all.pred_nov_vs_fam] >0);
+    included_Ind_neg = find([Neuronlist_all.P_pred_nov_vs_fam] <= StatisticalThreshold & [Neuronlist_all.pred_nov_vs_fam] <0 );
     included_Ind = [included_Ind_pos,included_Ind_neg];
 elseif contains(currenttype, 'All_included')
-    included_Ind = 1:numel(Neuronlist_good);%find([Neuronlist_good.P_pred_nov_vs_fam] <= inf );
+    included_Ind = 1:numel(Neuronlist_all);%find([Neuronlist_all.P_pred_nov_vs_fam] <= inf );
 else
     error('Wrong Novelty type');
 end
@@ -258,19 +246,19 @@ end
 clear Indices_struct 
 if contains(currenttype, 'Novel_selective')
     for ii = 1: numel(Indexname)
-        Indices_struct.(Indexname{ii}) = [Neuronlist_good(included_Ind_pos).(pars.experimentindices{ii}),1-[Neuronlist_good(included_Ind_neg).(pars.experimentindices{ii})]];
+        Indices_struct.(Indexname{ii}) = [Neuronlist_all(included_Ind_pos).(pars.experimentindices{ii}),1-[Neuronlist_all(included_Ind_neg).(pars.experimentindices{ii})]];
         % index range [0, 1] here
     end
 else
     for ii = 1: numel(Indexname)
-        Indices_struct.(Indexname{ii}) = [Neuronlist_good(included_Ind).(pars.experimentindices{ii})];
+        Indices_struct.(Indexname{ii}) = [Neuronlist_all(included_Ind).(pars.experimentindices{ii})];
     end
 end
 
 
 %% count the # of cells with current type in each area
 clear allRegionsCells
-cells_areas = [Neuronlist_good(included_Ind).(pars.anatomyCase)];
+cells_areas = [Neuronlist_all(included_Ind).(pars.anatomyCase)];
 
 for segmentInd = 1:numel(segmentNames)
     currentSegmentNo = segmentmap{segmentInd,2};
@@ -281,7 +269,7 @@ end
 
 %% caluculate correlations in each area
 clear Correlations P_corr Correlation_bounds
-cells_areas = [Neuronlist_good(included_Ind).(pars.anatomyCase)];
+cells_areas = [Neuronlist_all(included_Ind).(pars.anatomyCase)];
 for condInd = 1:numel(correlation_pairs)
     for segmentInd = 1:numel(segmentNames) % calculate correlation in each brain area
         currentSegmentNo = segmentmap{segmentInd,2};

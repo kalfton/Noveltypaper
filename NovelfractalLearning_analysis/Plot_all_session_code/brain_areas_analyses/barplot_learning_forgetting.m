@@ -1,5 +1,4 @@
 %% This is for plotting the learning and forgetting by brain area plot
-monkeyNames = ["Lemmy","Slayer","Combined"];
 
 clear pars;
 pars.sigThres = 0.01;
@@ -43,10 +42,9 @@ minmum_num = 20; % if an area has neuron number less than this, exclude it.
 
 %% Ploting start here.
 experimentConditions = pars.experimentConditions;
-%load(fullfile(directories.variableDir,'segmentmap_Kaining.mat'));% load segmentNames
 
 %% count the percentage of neurons and raw numbers in each brain area.
-[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_good, pars);
+[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_all, pars);
 segmentNames = segmentmap(:,1);
 %%
 allRegionsCells = neuron_counts.allRegionsCells;
@@ -56,7 +54,6 @@ pouts = neuron_counts.pouts;
 
 % sort the area by percentage of selective neuron
 [~,order] = sort([significantPerc.selective(1:end).P_pred_nov_vs_fam]);
-%order = [numel(order),order]; % the first one should be alway not assigned.
 allRegionsCells = allRegionsCells(order,1);
 segmentNames = segmentNames(order);
 segmentmap = segmentmap(order,:);
@@ -250,18 +247,18 @@ set(gca,'Xtick', [-100:20:100], 'xtickLabel',[100:-20:0,20:20:100]);
 
 %% learning index and forgetting index plot
 currenttype = Noveltytypes{1};
-included_Ind = find([Neuronlist_good.learningforgetinganalysis]);
+included_Ind = find([Neuronlist_all.learningforgetinganalysis]);
 Indexname = {'withindaylearning_newindex', 'acrossdayforget_newindex'};
 Indexlegend = {'learning index', 'forgetting index'};
 
 clear Indices_struct 
 for ii = 1: numel(Indexname)
-    Indices_struct.(Indexname{ii}) = [Neuronlist_good(included_Ind).(Indexname{ii})];
+    Indices_struct.(Indexname{ii}) = [Neuronlist_all(included_Ind).(Indexname{ii})];
 end
 
 %% count the # of cells with current type in each area
 clear allRegionsCells
-cells_areas = [Neuronlist_good(included_Ind).(anatomyCase)];
+cells_areas = [Neuronlist_all(included_Ind).(anatomyCase)];
 
 for segmentInd = 1:numel(segmentNames)
     currentSegmentNo = segmentmap{segmentInd,2};
@@ -273,7 +270,7 @@ end
 %% average the indices within each area
 
 clear Indexmean P_val Indexstd
-cells_areas = [Neuronlist_good(included_Ind).(anatomyCase)];
+cells_areas = [Neuronlist_all(included_Ind).(anatomyCase)];
 for condInd = 1:numel(Indexname)
     for segmentInd = 1:numel(segmentNames) % calculate correlation in each brain area
         currentSegmentNo = segmentmap{segmentInd,2};
@@ -410,20 +407,20 @@ axis square;
 %% count the # of cells with that is significant in learning, forgetting or both
 clear allRegionsCells learning_only_Cells forgetting_only_Cells Both_Cells Neither_Cells
 segmentNames = segmentmap(:,1);
-cells_areas = [Neuronlist_good(included_Ind).(anatomyCase)];
+cells_areas = [Neuronlist_all(included_Ind).(anatomyCase)];
 
 for segmentInd = 1:numel(segmentNames)
     currentSegmentNo = segmentmap{segmentInd,2};
     currentCells = ismember(cells_areas, currentSegmentNo);
     allRegionsCells(segmentInd,1) = numel(find(currentCells == 1));
-    learning_only_Cells(segmentInd,1) = nnz([Neuronlist_good(included_Ind).withindaylearning_newindex_p]<pars.sigThres_learning & [Neuronlist_good(included_Ind).acrossdayforget_newindex_p]>=pars.sigThres_learning & currentCells);
-    forgetting_only_Cells(segmentInd,1) = nnz([Neuronlist_good(included_Ind).withindaylearning_newindex_p]>=pars.sigThres_learning & [Neuronlist_good(included_Ind).acrossdayforget_newindex_p]<pars.sigThres_learning & currentCells);
-    Both_Cells(segmentInd,1) = nnz([Neuronlist_good(included_Ind).withindaylearning_newindex_p]<pars.sigThres_learning & [Neuronlist_good(included_Ind).acrossdayforget_newindex_p]<pars.sigThres_learning & currentCells);
-    Neither_Cells(segmentInd,1) = nnz([Neuronlist_good(included_Ind).withindaylearning_newindex_p]>=pars.sigThres_learning & [Neuronlist_good(included_Ind).acrossdayforget_newindex_p]>=pars.sigThres_learning & currentCells);
-    forgetting_pos_Cells(segmentInd,1) = nnz([Neuronlist_good(included_Ind).acrossdayforget_newindex]>=0 & [Neuronlist_good(included_Ind).acrossdayforget_newindex_p]<pars.sigThres_learning & currentCells);
-    forgetting_neg_Cells(segmentInd,1) = nnz([Neuronlist_good(included_Ind).acrossdayforget_newindex]<0 & [Neuronlist_good(included_Ind).acrossdayforget_newindex_p]<pars.sigThres_learning & currentCells);
-    learning_pos_Cells(segmentInd,1) = nnz([Neuronlist_good(included_Ind).withindaylearning_newindex]>=0 & [Neuronlist_good(included_Ind).withindaylearning_newindex_p]<pars.sigThres_learning & currentCells);
-    learning_neg_Cells(segmentInd,1) = nnz([Neuronlist_good(included_Ind).withindaylearning_newindex]<0 & [Neuronlist_good(included_Ind).withindaylearning_newindex_p]<pars.sigThres_learning & currentCells);
+    learning_only_Cells(segmentInd,1) = nnz([Neuronlist_all(included_Ind).withindaylearning_newindex_p]<pars.sigThres_learning & [Neuronlist_all(included_Ind).acrossdayforget_newindex_p]>=pars.sigThres_learning & currentCells);
+    forgetting_only_Cells(segmentInd,1) = nnz([Neuronlist_all(included_Ind).withindaylearning_newindex_p]>=pars.sigThres_learning & [Neuronlist_all(included_Ind).acrossdayforget_newindex_p]<pars.sigThres_learning & currentCells);
+    Both_Cells(segmentInd,1) = nnz([Neuronlist_all(included_Ind).withindaylearning_newindex_p]<pars.sigThres_learning & [Neuronlist_all(included_Ind).acrossdayforget_newindex_p]<pars.sigThres_learning & currentCells);
+    Neither_Cells(segmentInd,1) = nnz([Neuronlist_all(included_Ind).withindaylearning_newindex_p]>=pars.sigThres_learning & [Neuronlist_all(included_Ind).acrossdayforget_newindex_p]>=pars.sigThres_learning & currentCells);
+    forgetting_pos_Cells(segmentInd,1) = nnz([Neuronlist_all(included_Ind).acrossdayforget_newindex]>=0 & [Neuronlist_all(included_Ind).acrossdayforget_newindex_p]<pars.sigThres_learning & currentCells);
+    forgetting_neg_Cells(segmentInd,1) = nnz([Neuronlist_all(included_Ind).acrossdayforget_newindex]<0 & [Neuronlist_all(included_Ind).acrossdayforget_newindex_p]<pars.sigThres_learning & currentCells);
+    learning_pos_Cells(segmentInd,1) = nnz([Neuronlist_all(included_Ind).withindaylearning_newindex]>=0 & [Neuronlist_all(included_Ind).withindaylearning_newindex_p]<pars.sigThres_learning & currentCells);
+    learning_neg_Cells(segmentInd,1) = nnz([Neuronlist_all(included_Ind).withindaylearning_newindex]<0 & [Neuronlist_all(included_Ind).withindaylearning_newindex_p]<pars.sigThres_learning & currentCells);
     clear currentCells;
 end
 figure;

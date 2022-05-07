@@ -51,8 +51,7 @@ classdef fixation_session < handle
             Datastd = std(obj.reactiontime_types,[],2)/sqrt(size(obj.reactiontime_types,2));
             bar([1,2,3,4],Datamean, 'b'); hold on;
             errorbar([1,2,3,4],Datamean, Datastd,'r.');
-            % add lines and datapoint for each session
-            % plot([1,2,3,4], obj.reactiontime_types, 'r');
+
             p = signrank(obj.reactiontime_types(1,:), obj.reactiontime_types(2,:));
             text(1, Datamean(1)*1.2, ['p(1vs2) = ' mat2str(p,4)]);
             p = signrank(obj.reactiontime_types(2,:), obj.reactiontime_types(3,:));

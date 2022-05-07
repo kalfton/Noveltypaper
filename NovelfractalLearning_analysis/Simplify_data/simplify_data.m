@@ -97,6 +97,22 @@ for ii = 1: numel(Neuronlist_good)
         %Neuronlist_good(ii).electrodeDepth = nan;
         Neuronlist_good(ii).fcsvCoordinates_Matlab = [nan, nan, nan];
     end
+    % change monkeyName field from Monkey Slayer/Lemmy to S and L
+    Originalname = Neuronlist_good(ii).monkeyName;
+    if strcmpi(Originalname, 'Slayer')
+        Neuronlist_good(ii).monkeyName = 'S';
+    elseif strcmpi(Originalname, 'Lemmy')
+        Neuronlist_good(ii).monkeyName = 'L';
+    else
+        error('Invalid Monkey name');
+    end
+    % change the filename field
+    old_filename = Neuronlist_good(ii).filename;
+    endind = strfind(old_filename,'_tasksession')-1;
+    startind = 10;
+    new_filename = ['task_session_', old_filename(startind:endind) '.mat'];
+    Neuronlist_good(ii).filename = new_filename;
+    
 end
 Neuronlist_good = rmfield(Neuronlist_good,'electrodeDepth');
 
@@ -111,12 +127,13 @@ Neuronlist_good(neuronind).regionIndex = 45;
 Neuronlist_good = RenameField(Neuronlist_good, 'fcsvCoordinates_Matlab', 'electrodeLocation');
 
 
+
 % separate Slayer and Lemmy's neuronlist
 
-Neuronlist_Slayer = Neuronlist_good([Neuronlist_good.MonkeyID]==1);
-Neuronlist_Lemmy = Neuronlist_good([Neuronlist_good.MonkeyID]==2);
-save(fullfile('..\Plot_all_session_code\maindata','neuronliststruct_Lemmy_simplified'), 'Neuronlist_Slayer');
-save(fullfile('..\Plot_all_session_code\maindata','neuronliststruct_Slayer_simplified'), 'Neuronlist_Lemmy');
+Neuronlist_S = Neuronlist_good([Neuronlist_good.MonkeyID]==1);
+Neuronlist_L = Neuronlist_good([Neuronlist_good.MonkeyID]==2);
+save(fullfile('..\Plot_all_session_code\maindata','neuronliststruct_Monkey_S'), 'Neuronlist_S');
+save(fullfile('..\Plot_all_session_code\maindata','neuronliststruct_Monkey_L'), 'Neuronlist_L');
 
 %% 
 cd ../Plot_all_session_code

@@ -1,84 +1,30 @@
-%% This is for plotting the learning and forgetting by brain area plot
+function learning_forgetting_region_func(Neuronlist_all, neuron_counts, segmentmap, pars)
+celltype = pars.celltype;
+experimentConditions = pars.experimentConditions(1:3);
+legendname = pars.legend(1:3);
+plotpath = pars.plotpath;
 
-clear pars;
-pars.sigThres = 0.01;
-pars.sigThres_learning = 0.05;
-pars.tableColor_low = 0.001;
-pars.tableColor_mid = 0.01;
-pars.tableColor_high = 0.05;
-pars.experimentConditions = {'P_pred_nov_vs_fam','P_pred_vs_unpred_fam_perm', 'P_recency_ind_match_pos'}; %'P_violation_ind_perm' 'P_pred_vs_unpred_fam_perm', 'P_recency_ind_match_pos'
-pars.counting_pairs = {[1], [2], [3]};
-pars.experimentindices = {'pred_nov_vs_fam', 'pred_vs_unpred_fam', 'recency_ind_match_pos', 'violation_ind'};
-pars.experimentConditions_color = {'r','b','g', [0.8,0.2,0.8]};
-pars.legend = {'Novelty', 'Sensory surprise', 'Recency', 'Violation'};
-pars.cellThreshold = 90;
-pars.exclude_region = {'Claustrum', 'Zona Incerta'};
-pars.include_region = {'AVMTE', '9/46V', 'Basal forebrain', 'Amygdala',...
-    'Posterior Medial Temporal Cortex', '45B', 'OFC', 'Striatum'...
-    'Anterior Entorhinal cortex', 'Globus Pallidus', 'Hippocampus'...
-    'DIP', '8AD', 'Posterior Entorhinal cortex', 'Thalamus', '8A', '8B',...
-    '6DC', '6DR', 'ACC', '4'};
-
-pars.celltype = {'positive', 'negative','selective'};
-pars.separate_pos_neg = true;
-pars.ifCombined = 0;
-pars.applyCellThreshold = 1;
-pars.anatomyCase = 'regionIndex';
-
-
-anatomyCase = 'regionIndex';
-createneuronlist = false;
-StatisticalThreshold=0.01;
+minmum_num = 20; % In the learning and forgetting analysis, the brain area need to have the minimum number of novelty excited neurons
 barinterv = 5;
 
-%parameters for correlation plot
-Noveltytypes = {'Nov_excited', 'Nov_inhibited', 'Novel_selective','All_included'};
-Indexname = {'Novelty_ind', 'Surprise_ind', 'Recency_ind', 'Violation_ind'};
-correlation_pairs = {[1,2], [1,3]};
-correlation_legend = {'Novelty & Surprise', 'Novelty & Recency', 'Novelty & violation', 'Surprise & Recency'};
-pars.correlation_color = {'b','g',[0.8,0.2,0.8]};
-minmum_num = 20; % if an area has neuron number less than this, exclude it.
-
-
-%% Ploting start here.
-experimentConditions = pars.experimentConditions;
-
-%% count the percentage of neurons and raw numbers in each brain area.
-[neuron_counts,segmentmap] = neuron_counts_region_V2(segmentmap, Neuronlist_all, pars);
 segmentNames = segmentmap(:,1);
-%%
 allRegionsCells = neuron_counts.allRegionsCells;
 significantCounts = neuron_counts.significantCounts;
 significantPerc = neuron_counts.significantPerc;
 pouts = neuron_counts.pouts;
 
-% sort the area by percentage of selective neuron
-[~,order] = sort([significantPerc.selective(1:end).P_pred_nov_vs_fam]);
-allRegionsCells = allRegionsCells(order,1);
-segmentNames = segmentNames(order);
-segmentmap = segmentmap(order,:);
-celltype = pars.celltype;
-for celltypeInd = 1:numel(celltype)
-    significantCounts.(celltype{celltypeInd}) = significantCounts.(celltype{celltypeInd})(order);
-    significantPerc.(celltype{celltypeInd}) = significantPerc.(celltype{celltypeInd})(order);
-    pouts.(celltype{celltypeInd}) = pouts.(celltype{celltypeInd})(order);
-end
-
-
-%plots
-
+%% plots
 figure;
 nsubplot(1,2,1:1,1:1);
 plotInd = 0;
 barInd = zeros(1,numel(experimentConditions));
 clear plot_id;
 
-for celltypeInd = 1:2%1:2%numel(celltype)
+for celltypeInd = 1:2
 currentCellCase = celltype{celltypeInd};
 for condInd = 1:numel(experimentConditions)
     plotInd = plotInd + 1;
     w = 0.05;
-    color = [0 0.7 0.7];
     perc = 100 * [significantPerc.(currentCellCase)(:).(experimentConditions{condInd})];
     if strcmpi(currentCellCase, 'negative')
         perc = -perc;
@@ -87,9 +33,8 @@ for condInd = 1:numel(experimentConditions)
     barInd(condInd) = plotInd;
     color_star = [1 0 0];
     barposition = (barinterv)*(1:numel(perc))+numel(experimentConditions)-condInd;
-    plot_id(plotInd) = barh(barposition, perc,w,'FaceColor',pars.experimentConditions_color{condInd});
     %plot the trending line
-    plot(perc,barposition,  'Linewidth', 1, 'Color',pars.experimentConditions_color{condInd});
+    plot_id(plotInd) = plot(perc,barposition,  'Linewidth', 1, 'Color',pars.experimentConditions_color{condInd});
     hold on;
     if strcmpi(currentCellCase, 'selective')
         xlim([0 60]);
@@ -106,22 +51,19 @@ for condInd = 1:numel(experimentConditions)
     for segmentInd = 1:numel(segmentNames)
         % write the actual #
         % sig of binomial test
-        if pouts.(currentCellCase)(segmentInd).(experimentConditions{condInd}) <= pars.tableColor_low
+        if pouts.(currentCellCase)(segmentInd).(experimentConditions{condInd}) <= pars.sigTres_low
             text(perc(segmentInd) + adj/2, barposition(segmentInd) + w/3,'***','Color',color_star);
-        elseif pouts.(currentCellCase)(segmentInd).(experimentConditions{condInd}) <= pars.tableColor_mid
+        elseif pouts.(currentCellCase)(segmentInd).(experimentConditions{condInd}) <= pars.sigTres_mid
             text(perc(segmentInd) + adj/2, barposition(segmentInd) + w/3,'**','Color',color_star);
-        elseif pouts.(currentCellCase)(segmentInd).(experimentConditions{condInd}) <= pars.tableColor_high
+        elseif pouts.(currentCellCase)(segmentInd).(experimentConditions{condInd}) <= pars.sigTres_high
             text(perc(segmentInd) + adj/2, barposition(segmentInd) + w/3,'*','Color',color_star);
         end
         %
     end
     %
-    xt = xticks;
-    xEnd = xt(end);
     if condInd == 1 && contains( currentCellCase, {'positive', 'selective'})
         for segmentInd = 1:numel(segmentNames)
             text(percCoord(segmentInd) + adj, barposition(segmentInd)-floor(numel(experimentConditions)/2), num2str(significantCounts.(celltype{celltypeInd})(segmentInd).(experimentConditions{condInd})));
-            %  text(percCoord(segmentInd) + 2*adj, segmentInd,num2str(significantCounts(segmentInd).('allSig')));
             text(percCoord(segmentInd) + 3*adj, barposition(segmentInd)-floor(numel(experimentConditions)/2), num2str(allRegionsCells(segmentInd)));
         end
     end
@@ -222,20 +164,14 @@ text(textx, barposition(end-10), sprintf('surprise, highest vs lowest, p = %.4f'
 
 end
 
-legend(plot_id(barInd),pars.legend,'Position',[0.4 0.9 0.05 0.025]);
+plot([0,0],ylim,'k');
+legend(plot_id(barInd),legendname,'Position',[0.4 0.9 0.05 0.025]);
 xlabel('% of cells');
 ylabel('Segment Names');
 
-if excludemua
-    str2title = {[' Single Units Original Areas '] ; ['# of cells']};
-else
-    str2title = {[' Multi+Single Units Original Areas '] ; ['# of cells']};
-end
-if pars.applyCellThreshold
-    str2title{end + 1} = ['Including only regions with cell # >',num2str(pars.cellThreshold)];
-else
-    str2title{end + 1} = ['No cell # threshold applied'];
-end
+
+str2title = {[' Single Units Original Areas '] ; ['# of cells']};
+str2title{end + 1} = ['Including only regions with cell # >',num2str(pars.cellThreshold)];
 title(str2title);
 
 yticks(1:numel(segmentNames));
@@ -246,7 +182,6 @@ set(gca,'Xtick', [-100:20:100], 'xtickLabel',[100:-20:0,20:20:100]);
 
 
 %% learning index and forgetting index plot
-currenttype = Noveltytypes{1};
 included_Ind = find([Neuronlist_all.learningforgetinganalysis]);
 Indexname = {'withindaylearning_newindex', 'acrossdayforget_newindex'};
 Indexlegend = {'learning index', 'forgetting index'};
@@ -258,7 +193,7 @@ end
 
 %% count the # of cells with current type in each area
 clear allRegionsCells
-cells_areas = [Neuronlist_all(included_Ind).(anatomyCase)];
+cells_areas = [Neuronlist_all(included_Ind).(pars.anatomyCase)];
 
 for segmentInd = 1:numel(segmentNames)
     currentSegmentNo = segmentmap{segmentInd,2};
@@ -270,14 +205,13 @@ end
 %% average the indices within each area
 
 clear Indexmean P_val Indexstd
-cells_areas = [Neuronlist_all(included_Ind).(anatomyCase)];
+cells_areas = [Neuronlist_all(included_Ind).(pars.anatomyCase)];
 for condInd = 1:numel(Indexname)
-    for segmentInd = 1:numel(segmentNames) % calculate correlation in each brain area
+    for segmentInd = 1:numel(segmentNames)
         currentSegmentNo = segmentmap{segmentInd,2};
         
         current_index = Indices_struct.(Indexname{condInd});
         current_index = current_index(ismember(cells_areas, currentSegmentNo));
-        %current_index = current_index(~isnan(current_index));
         
         if numel(current_index)<minmum_num 
             meanind = nan;
@@ -315,7 +249,6 @@ allRegionsCells = allRegionsCells(included_brainarea,:);
 for condInd = 1:numel(Indexname)
     plotInd = plotInd + 1;
     w = 0.05;
-    color = [0 0.7 0.7];
     
     perc = [Indexmean(:,condInd)];
     upperbound = Indexstd(:,condInd);
@@ -323,25 +256,22 @@ for condInd = 1:numel(Indexname)
     percCoord = perc;
     barInd(condInd) = plotInd;
     color_star = [1 0 0];
-    barposition = (barinterv)*(1:numel(perc))+numel(correlation_pairs)-condInd;
-    plot_id(plotInd) = barh(barposition, perc,w,'FaceColor',pars.correlation_color{condInd});
+    barposition = (barinterv)*(1:numel(perc))+numel(Indexname)-condInd;
     hold on;
     %error bar
-    errorbar(perc, barposition,(upperbound+lowerbound)/2, -(upperbound+lowerbound)/2, 'horizontal', 'LineStyle','none', 'Marker', '.', 'color', pars.correlation_color{condInd});
+    errorbar(perc, barposition,(upperbound+lowerbound)/2, -(upperbound+lowerbound)/2, 'horizontal', 'LineStyle','none', 'Marker', '.', 'color', pars.second_color{condInd});
     %plot the trending line
-    plot(perc,barposition,  'Linewidth', 1, 'Color',pars.correlation_color{condInd});
+    plot_id(plotInd) = plot(perc,barposition,  'Linewidth', 1, 'Color',pars.second_color{condInd});
     xlim([-0.05 0.1]);
     xl = xlim ; xl = xl(end);
     adj = xl/30;
     %% percentage acc. to all cells
     for segmentInd = 1:numel(segmentNames)
-        % write the actual #
-        % sig of binomial test
-        if P_val(segmentInd,condInd) <= pars.tableColor_low
+        if P_val(segmentInd,condInd) <= pars.sigTres_low
             text(perc(segmentInd) + adj/2, barposition(segmentInd) + w/3,'***','Color',color_star);
-        elseif P_val(segmentInd,condInd) <= pars.tableColor_mid
+        elseif P_val(segmentInd,condInd) <= pars.sigTres_mid
             text(perc(segmentInd) + adj/2, barposition(segmentInd) + w/3,'**','Color',color_star);
-        elseif P_val(segmentInd,condInd) <= pars.tableColor_high
+        elseif P_val(segmentInd,condInd) <= pars.sigTres_high
             text(perc(segmentInd) + adj/2, barposition(segmentInd) + w/3,'*','Color',color_star);
         end
         %
@@ -352,11 +282,12 @@ for condInd = 1:numel(Indexname)
     xEnd = xt(end);
     if condInd == 1
         for segmentInd = 1:numel(segmentNames)
-            text(percCoord(segmentInd) + 4*adj, barposition(segmentInd)-floor(numel(correlation_pairs)/2), num2str(allRegionsCells(segmentInd)));
+            text(percCoord(segmentInd) + 4*adj, barposition(segmentInd)-floor(numel(Indexname)/2), num2str(allRegionsCells(segmentInd)));
         end
     end
 end
 
+plot([0,0],ylim,'k');
 textx = 0.05;
 notnanlogical = ~isnan(Indexmean(:,1));
 [rho, p] = corr(Indexmean(notnanlogical,1), Indexmean(notnanlogical,2), 'Type', 'Spearman');
@@ -366,28 +297,15 @@ legend(plot_id(barInd),Indexlegend(1:numel(barInd)),'Position',[0.9 0.9 0.05 0.0
 xlabel('Indices value');
 ylabel('Segment Names');
 
-if excludemua
-    str2title = {[' Single Units Original Areas ']};
-else
-    str2title = {[' Multi+Single Units Original Areas '] };
-end
-
+str2title = {[' Multi+Single Units Original Areas '] };
 str2title{end + 1} = ['Learning index and Forgetting index are averaged in areas with cell # >',num2str(minmum_num)];
-str2title{end + 1} = ['Cell type: ',currenttype];
-
-
 title(str2title, 'interpreter','none');
 
 
-
 yticks(1:numel(segmentNames));
-set(gca,'Ytick', (barinterv)*(1:numel(segmentNames))+floor(numel(correlation_pairs)/2), 'YtickLabel',segmentNames,'FontAngle','italic');
-%set(gcf, 'Position', get(0, 'Screensize'));
-
-set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);
+set(gca,'Ytick', (barinterv)*(1:numel(segmentNames))+floor(numel(Indexname)/2), 'YtickLabel',segmentNames,'FontAngle','italic');
 
 nsubplot(3,2,3,2:2);
-%set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);
 scatter(Indexmean(:,1), Indexmean(:,2), 'filled')
 xl = xlim ; xl = xl(end);
 adj = xl/60;
@@ -402,12 +320,14 @@ plot(get(gca, 'xlim'),[0,0], 'k');
 plot([0,0], get(gca, 'ylim'), 'k');
 axis square;
 
+set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);
+print(fullfile(plotpath, 'Learning_and_forgetting_by_brain_areas.pdf'), '-dpdf');
 
 % a bar pie version of the plot
 %% count the # of cells with that is significant in learning, forgetting or both
 clear allRegionsCells learning_only_Cells forgetting_only_Cells Both_Cells Neither_Cells
 segmentNames = segmentmap(:,1);
-cells_areas = [Neuronlist_all(included_Ind).(anatomyCase)];
+cells_areas = [Neuronlist_all(included_Ind).(pars.anatomyCase)];
 
 for segmentInd = 1:numel(segmentNames)
     currentSegmentNo = segmentmap{segmentInd,2};
@@ -486,6 +406,4 @@ end
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);
 print(fullfile(plotpath, 'forgetting_neurons_in_brain_area_p=0.05.pdf'), '-dpdf');
 
-
-
-
+end

@@ -148,10 +148,6 @@ function ScatterIndicesheatmap(datax,datay,lim, show_cb)
     text(1,0.6,['rho = ' mat2str(rho,3)],'FontSize',11)
     text(maxval(1), maxval(2), [' n = ' mat2str(length(datax)) ])
     
-    h2 = lsline;
-    h2.LineWidth = 1;
-    
-    
     index=(datax(:,2)<0.05 | datay(:,2)<0.05);
     [rho,pval] = corr(datax(index,1),datay(index,1), 'Type', 'Spearman');
     

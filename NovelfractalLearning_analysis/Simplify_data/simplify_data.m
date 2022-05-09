@@ -113,6 +113,7 @@ for ii = 1: numel(Neuronlist_good)
     new_filename = ['task_session_', old_filename(startind:endind) '.mat'];
     Neuronlist_good(ii).filename = new_filename;
     
+    
 end
 Neuronlist_good = rmfield(Neuronlist_good,'electrodeDepth');
 

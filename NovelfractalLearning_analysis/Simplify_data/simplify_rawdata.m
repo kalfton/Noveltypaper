@@ -94,4 +94,3 @@ end
 
 disp(n_neurons);
 
-% To do: replace the Monkey/human names in the filename with "Task_Session"

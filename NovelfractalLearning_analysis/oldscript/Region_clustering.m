@@ -70,7 +70,7 @@ end
 %%% Matrices which stores the p value of pairwise comparison of regions
 figure;
 axplacey = {1:10, 11:20, 11:20, 1:10};
-axplacex = {1:8, 11:18, 1:8, 11: 20};
+axplacex = {1:8, 11:18, 1:8, 11: 18};
 saved_matrices = cell(3,1);
 for condInd = 1:numel(pars.experimentConditions)
 
@@ -177,7 +177,7 @@ xl = xlim;
 
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);
-print(gcf,'-dpdf', '-painters',fullfile(plotpath, ['brain_area_normalized_ROC' '.pdf']));
+print(gcf,'-dpdf', '-painters',fullfile(plotpath, ['brain_area_clustering' '.pdf']));
 
 
 

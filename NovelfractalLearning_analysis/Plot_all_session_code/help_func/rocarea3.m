@@ -151,22 +151,3 @@ if nargout > 1
     end;
 end;
 
-
-
-
-
-
-
-%         % method 1: making histograms
-%         %  simplest to implement, but 
-%         %  takes 3x as much time as method 2
-%         %  on my test cases
-%         for c = 1:nc
-%             uvals = unique([N(:,c) ; S(:,c)]);
-%             hn = tocolvector(histc(N(:,c),uvals));
-%             hs = tocolvector(histc(S(:,c),uvals));
-%             
-%             pct_noise = [0 ; (cumsum(hn) ./ nn) ; 1];
-%             pct_signal = [0 ; (cumsum(hs) ./ ns) ; 1];
-%             area(c) = sum(diff(pct_signal).*(pct_noise(1:(end-1)) + 0.5.*diff(pct_noise)));
-%         end;

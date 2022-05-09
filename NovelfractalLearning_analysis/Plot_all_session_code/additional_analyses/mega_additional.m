@@ -12,7 +12,6 @@ DDD = [DDD; dir(fullfile(datapath,'*.mat'))];
 
 generate_new_data = false; %true or false, if set to true, original data is needed.
 
-tic
 if generate_new_data
     fixation_obj = fixation_session();
     classifer_obj = novelty_classifier_class();
@@ -91,7 +90,6 @@ noise_corr_obj.noise_correlation_analysis(plotpath, 'normalize', 1);
 
 noise_corr_obj.noise_variance_analysis(plotpath);
 
-toc
 
 
 

@@ -1,4 +1,4 @@
-# Noveltypaper
+# Novelty paper
 This is the repository for sharing the code for the paper: [*"Surprise and recency in novelty detection in the
 primate brain"*](https://www.cell.com/current-biology/pdfExtended/S0960-9822(22)00504-8) by Kaining Zhang, Ethan S. Bromberg-Martin, Fatih Sogukpinar, Kim Kocher and Ilya E. Monosov.
 
@@ -48,7 +48,10 @@ Key fields in the Neuronlist:
 |'acrossdayforget_newindex_p' | p-value of across-day forgetting index |
 |'learningforgetinganalysis'  | criterion to be included in the learning-forgetting correlation analysis |
 
-</br></br>
+</br>
+
+## Raw data
+
 The raw neuronal spike data can be downloaded [here](https://wustl.box.com/s/v4x3zjvyopexyud3ghnk87apav9ma6ay).
 
 Each raw file (task_session_\*.mat) is a recording session, and it contains several struct variables, The struct variables whose names look like 'SPK*' contain the sorted neuron's information in each session. The information includes the neuron's spike time point in each trial (field name: sptimes) and each fractal object (field name: fracsptimes). 

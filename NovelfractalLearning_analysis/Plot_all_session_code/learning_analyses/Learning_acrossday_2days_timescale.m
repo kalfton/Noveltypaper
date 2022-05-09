@@ -1,4 +1,3 @@
-close all;
 %shuffling_num = 10000;
 run_longtimebootstrapping = 0;
 % 
@@ -165,9 +164,7 @@ if xy>1 || ~run_longtimebootstrapping
 %     plot(plot_x, ypred2,'r');
     
 else
-    %% bootstrapping to get confidence interval:
-    tic
-    %% batch the bootstrapping on server
+    %% bootstrapping to get confidence interval: 
     
     pars.shuffling_num = shuffling_num;
     pars.fractalIDset_S = fractalIDset_S;
@@ -175,9 +172,7 @@ else
     pars.maxappearance = max(Regression_L1_x);
     pars.smoothfun = smoothfun;
     
-    tic
     datastruct = Learning_acrossday_bootstrapping(Neuronlist_learning,pars);
-    t = toc
     
     normalized_meanFR_L1_bootstrapping = datastruct.normalized_meanFR_L1_bootstrapping;
     normalized_meanFR_L2_bootstrapping = datastruct.normalized_meanFR_L2_bootstrapping;
@@ -236,8 +231,7 @@ else
     ylabel('Learning rate (alpha)')
     %legend({'Familiar vs Learning 2 days', 'Learning 2 days vs 1 day', '1 day vs Novel'});
     xlim([0,20]);
-    %%
-    toc
+
 end
 print(gcf,'-dpdf', '-painters',[plotpath '/Learning_n_day_fitting' Select_criteria{xy} '.pdf']);
 end

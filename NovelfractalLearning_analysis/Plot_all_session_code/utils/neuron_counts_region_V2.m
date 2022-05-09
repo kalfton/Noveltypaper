@@ -9,22 +9,16 @@ for segmentInd = 1:numel(segmentNames)
     allRegionsCells(segmentInd,1) = numel(find(currentCells == 1));
     clear currentCells;
 end
-if pars.applyCellThreshold
-    goodRegions = find(allRegionsCells >= pars.cellThreshold & ~contains(segmentNames, pars.exclude_region));
-%     include_logical = false(size(segmentNames));
-%     for ii = 1:numel(segmentNames)
-%         include_logical(ii) = any(strcmpi(segmentNames{ii}, pars.include_region));
-%     end
-%     goodRegions = include_logical;
-    segmentmap = segmentmap(goodRegions,:);
-    segmentNames = segmentNames(goodRegions,:);
-    allRegionsCells = allRegionsCells(goodRegions);
-end
 
+% apply threshold
+goodRegions = find(allRegionsCells >= pars.cellThreshold & ~contains(segmentNames, pars.exclude_region));
+segmentmap = segmentmap(goodRegions,:);
+segmentNames = segmentNames(goodRegions,:);
+allRegionsCells = allRegionsCells(goodRegions);
 
 experimentConditions = pars.experimentConditions ;
 experimentindices = pars.experimentindices;
-StatisticalThreshold = pars.sigThres;
+StatisticalThreshold = pars.StatisticalThreshold;
 celltype = pars.celltype;
 clear significants significantCounts significantPerc pouts
 
@@ -66,10 +60,6 @@ for celltypeInd = 1:numel(celltype)
             significantPerc.(celltype{celltypeInd})(segmentInd).(conditionname) =  s/n;
             Sided = 'Greater';
             pouts.(celltype{celltypeInd})(segmentInd).(conditionname) = myBinomTest(s,n,p,Sided);
-            
-            % for debugging
-            
-            %         pouts.sig(segmentInd,condInd) = myBinomTest(s,n,p,Sided);
             clear temp;
         end
     end

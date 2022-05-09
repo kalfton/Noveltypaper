@@ -94,7 +94,7 @@ Rasters_f = Hist_raster_f;
 Rasterscs_f=Hist_raster_f;
 
 %%
-close all;
+%close all;
 figure;
 % basic infomation
 nsubplot(2,2, 1,2);

@@ -5,7 +5,6 @@ addpath('./utils');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 profile on;
 plotpath = './plots';
-exclude_mua = true;
 shuffling_num = 1000; % the shuffling number is set to 1000 to reduce the running time, it is originally set as 10000
 StatisticalThreshold=0.01;
 
@@ -40,7 +39,7 @@ indices.PRewInfoAnticipIndex = [Neuronlist_all(:).RewInfoAnticipIndexP_split]';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Analysis start
-
+fprintf('Neuron Population analyses begin... \n');
 addpath('./population_analyses');
 
 % Bar plot figure
@@ -62,18 +61,20 @@ addpath('./additional_analyses');
 
 mega_additional;
 
+fprintf('Neuron Population analyses finished! \n');
+
 %% Brain area analyses
-addpath('./brain_areas_analyses')
-load('./brain_areas_analyses/segments/segmentmap')
+fprintf('Brain regions analyses begin... \n');
 
-All_region_plot;
+addpath('./brain_region_analyses')
+load('./brain_region_analyses/segments/segmentmap')
 
-Region_clustering;
+brain_region_analysis_mega;
 
-barplot_learning_forgetting;
-
-
+fprintf('Brain regions analyses finished! \n');
 %% Learning analyses
+fprintf('Learning analyses begin... \n');
+
 addpath('./learning_analyses');
 plotpath = './plots';
 
@@ -85,8 +86,11 @@ Learning_acrossday_5days_barplot;
 
 fast_slow_learning_forgetting_analysis;
 
+fprintf('Learning analyses finished! \n');
 
 %% pupil
+fprintf('Pupil analyses begin... \n');
+
 addpath('./pupil');
 Monkey = 'L';
 load('pupillist_Monkey_L');
@@ -96,17 +100,23 @@ Monkey = 'S';
 load('pupillist_Monkey_S');
 pupil_plots(pupillist, Monkey, plotpath);
 
+fprintf('Pupil analyses finished! \n');
+close all;
 %% Example neurons:
 % Sampleneuron: This requires loading the raw files.
 % which can be downloaded here:
 % https://wustl.box.com/s/v4x3zjvyopexyud3ghnk87apav9ma6ay
 % This code is also an example to show how we calculate novelty index,
 % sensory surprise index and recency index.
+fprintf('Example neuron plot begin... \n');
+
 addpath('./example_neuron_code');
 Sampleneuron;
 
 Sampleneuron_for_learning;
 
+fprintf('Example neuron plot finished! \n');
 
+close all;
 profile viewer;
 

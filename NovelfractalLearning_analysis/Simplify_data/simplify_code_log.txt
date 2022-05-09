@@ -19,10 +19,18 @@ $ Why the total neuron number in the neuronlist_all(n=17749) are different from 
 
 To do: change the field content in the filename(done)
 
-To do: Add error message for unable to find raw data.
+To do: Add error message for unable to find raw data.(done)
 
-To do: Neuronlist_good-> Neuronlist_all
+To do: Neuronlist_good-> Neuronlist_all(done)
 
-To do: Check why learning_ind is in the struct array, and same for "acrossdayforgetroc"
+To do: in the learning_forgetting plot: get rid of the horizontal bar, and maybe refactoring the code of the brain area plots.
+Refactoring the brain area code: See if all field in pars are needed, and whether I can put some specific parameters in global pars to specific function?
+Get rid of warning.
+
+Alg:
+Commit
+Delete old code, rename the file.
+Comit again.
+
 
 

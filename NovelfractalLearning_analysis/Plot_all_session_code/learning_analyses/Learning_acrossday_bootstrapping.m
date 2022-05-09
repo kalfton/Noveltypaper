@@ -5,7 +5,6 @@ fractalIDset_S = pars.fractalIDset_S;
 fractalIDset_L = pars.fractalIDset_L;
 smoothfun = pars.smoothfun;
 maxappearance = pars.maxappearance;
-%% batch the bootstrapping on server
 
 
 normalized_meanFR_L1_bootstrapping = zeros(shuffling_num, maxappearance);
@@ -15,7 +14,7 @@ learning_rate_L1_s_bootstrapping = zeros(shuffling_num, maxappearance-1);
 learning_rate_L2_s_bootstrapping = zeros(shuffling_num, maxappearance-1);
 
 
-
+% use parfor to make it run faster.
 parfor xyz = 1:shuffling_num
     % initialize
     Regression_FL_x = [];

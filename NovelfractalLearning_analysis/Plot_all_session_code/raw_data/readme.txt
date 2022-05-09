@@ -1,1 +1,0 @@
-The raw data can be downloaded from: https://wustl.box.com/s/v4x3zjvyopexyud3ghnk87apav9ma6ay

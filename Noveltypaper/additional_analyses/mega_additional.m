@@ -3,10 +3,10 @@
 % addpath('..\help_func');
 rng(0);
 DDD=[];
-datapath = '.\raw_data\Monkey_L_raw';
-DDD = dir(fullfile(datapath,'*.mat'));
-datapath = '.\raw_data\Monkey_S_raw';
-DDD = [DDD; dir(fullfile(datapath,'*.mat'))];
+datapath_L = '.\raw_data\Monkey_L_raw';
+DDD = dir(fullfile(datapath_L,'*.mat'));
+datapath_S = '.\raw_data\Monkey_S_raw';
+DDD = [DDD; dir(fullfile(datapath_S,'*.mat'))];
 
 %plotpath = '.\plots';
 
@@ -18,7 +18,7 @@ if generate_new_data
     noise_corr_obj = noise_correlation_class('noveltyresponsive');
     
     if isempty(DDD)
-        error('Raw data is needed for this calculation');
+        error(['Raw data is needed for this calculation. They should be put in the folder: "' datapath_S '" and "' datapath_L '".'] );
     end
     
     neuron_n = 0; % count the neuron number

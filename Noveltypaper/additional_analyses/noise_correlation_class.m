@@ -277,7 +277,7 @@ classdef noise_correlation_class < handle
             
             
             set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
-            print(gcf,'-dpdf', '-painters',fullfile(path,['noise_varance_analysis' obj.included_neuron '.pdf']));
+            print(gcf,'-dpdf', '-painters',fullfile(path,['noise_varance_analysis_' obj.included_neuron '.pdf']));
             
             
         end

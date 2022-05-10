@@ -113,6 +113,22 @@ for ii = 1: numel(Neuronlist_good)
     new_filename = ['task_session_', old_filename(startind:endind) '.mat'];
     Neuronlist_good(ii).filename = new_filename;
     
+    % change the region names:
+    if strcmpi(Neuronlist_good(ii).region, 'TE') || strcmpi(Neuronlist_good(ii).region, 'Perirhinal cortex')
+        Neuronlist_good(ii).region = 'AVMTC';
+    elseif strcmpi(Neuronlist_good(ii).region, 'Caudate') || strcmpi(Neuronlist_good(ii).region, 'Putamen')
+        Neuronlist_good(ii).region = 'Striatum';
+    elseif strcmpi(Neuronlist_good(ii).region, 'Claustrum') || strcmpi(Neuronlist_good(ii).region, 'Zona Incerta')
+        Neuronlist_good(ii).region = 'Not Assigned';
+        Neuronlist_good(ii).regionIndex = 45;
+    elseif strcmpi(Neuronlist_good(ii).region, "Not Assigned")
+        Neuronlist_good(ii).region = 'Not Assigned';
+        %sanity check
+        if Neuronlist_good(ii).regionIndex ~= 45
+            error('index and region do not match')
+        end
+    end
+    
     
 end
 Neuronlist_good = rmfield(Neuronlist_good,'electrodeDepth');
@@ -122,7 +138,7 @@ Neuronlist_good = rmfield(Neuronlist_good,'electrodeDepth');
 neuronind = find(cellfun(@isempty,{Neuronlist_good(:).region}));%8142
 %Neuronlist_good(ii).electrodeDepth = nan;
 Neuronlist_good(neuronind).fcsvCoordinates_Matlab = [nan, nan, nan];
-Neuronlist_good(neuronind).region = "Not Assigned";
+Neuronlist_good(neuronind).region = 'Not Assigned';
 Neuronlist_good(neuronind).regionIndex = 45;
 
 Neuronlist_good = RenameField(Neuronlist_good, 'fcsvCoordinates_Matlab', 'electrodeLocation');
@@ -133,11 +149,11 @@ Neuronlist_good = RenameField(Neuronlist_good, 'fcsvCoordinates_Matlab', 'electr
 
 Neuronlist_S = Neuronlist_good([Neuronlist_good.MonkeyID]==1);
 Neuronlist_L = Neuronlist_good([Neuronlist_good.MonkeyID]==2);
-save(fullfile('..\Plot_all_session_code\maindata','neuronliststruct_Monkey_S'), 'Neuronlist_S');
-save(fullfile('..\Plot_all_session_code\maindata','neuronliststruct_Monkey_L'), 'Neuronlist_L');
+save(fullfile('..\Noveltypaper\maindata','neuronliststruct_Monkey_S'), 'Neuronlist_S');
+save(fullfile('..\Noveltypaper\maindata','neuronliststruct_Monkey_L'), 'Neuronlist_L');
 
 %% 
-cd ../Plot_all_session_code
+cd ../Noveltypaper
 Mega_script;
 
 

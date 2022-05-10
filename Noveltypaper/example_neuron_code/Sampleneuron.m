@@ -1,7 +1,7 @@
 %%%% find a good Novelty and recency encoding neuron and plot its SDF
-example_neuron_outputfolder = fullfile(plotpath,'\sampleneurons');
-raw_file_folder = '.\raw_data';
-example_file_folder = '.\example_neuron_code\exampleneuron_raw_data';
+example_neuron_outputfolder = fullfile(plotpath,'sampleneurons');
+raw_file_folder = fullfile('.','raw_data');
+example_file_folder = fullfile('.','example_neuron_code','exampleneuron_raw_data');
 Sampleneuron_set = find([Neuronlist_all.pred_nov_vs_fam]>0 & [Neuronlist_all.P_pred_nov_vs_fam]<StatisticalThreshold &...
     [Neuronlist_all.pred_vs_unpred_fam]>0 & [Neuronlist_all.P_pred_vs_unpred_fam_perm]<StatisticalThreshold &...
     [Neuronlist_all.recency_ind_match_pos]>0 & [Neuronlist_all.P_recency_ind_match_pos]<StatisticalThreshold); % violation_ind_4roc>0 & Pviolation_ind_4roc<StatisticalThreshold

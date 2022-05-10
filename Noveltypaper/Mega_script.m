@@ -3,7 +3,6 @@ addpath('./help_func');
 addpath('./utils');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-profile on;
 plotpath = './plots';
 shuffling_num = 1000; % the shuffling number is set to 1000 to reduce the running time, it is originally set as 10000
 StatisticalThreshold=0.01;
@@ -44,10 +43,10 @@ addpath('./population_analyses');
 
 % Bar plot figure
 
-plotname = ['Indices_barplot_all_session.pdf'];
+plotname = ['Indices_barplot_Main.pdf'];
 barplot_func(indices, plotpath, plotname);
 
-% heatmap figure
+% correlation figure
 correlation_plot_func(indices, plotpath, {});
 
 % Info plot
@@ -103,10 +102,7 @@ pupil_plots(pupillist, Monkey, plotpath);
 fprintf('Pupil analyses finished! \n');
 close all;
 %% Example neurons:
-% Sampleneuron: This requires loading the raw files.
-% which can be downloaded here:
-% https://wustl.box.com/s/v4x3zjvyopexyud3ghnk87apav9ma6ay
-% This code is also an example to show how we calculate novelty index,
+% This code is an example to show how we calculate novelty index,
 % sensory surprise index and recency index.
 fprintf('Example neuron plot begin... \n');
 
@@ -118,5 +114,4 @@ Sampleneuron_for_learning;
 fprintf('Example neuron plot finished! \n');
 
 close all;
-profile viewer;
 

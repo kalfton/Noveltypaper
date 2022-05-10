@@ -1,6 +1,7 @@
 %%%% find a good Novelty and recency encoding neuron and plot its SDF
-sample_neuron_outputfolder = fullfile(plotpath,'\sampleneurons');
+example_neuron_outputfolder = fullfile(plotpath,'\sampleneurons');
 raw_file_folder = '.\raw_data';
+example_file_folder = '.\example_neuron_code\exampleneuron_raw_data';
 Sampleneuron_set = find([Neuronlist_all.pred_nov_vs_fam]>0 & [Neuronlist_all.P_pred_nov_vs_fam]<StatisticalThreshold &...
     [Neuronlist_all.pred_vs_unpred_fam]>0 & [Neuronlist_all.P_pred_vs_unpred_fam_perm]<StatisticalThreshold &...
     [Neuronlist_all.recency_ind_match_pos]>0 & [Neuronlist_all.P_recency_ind_match_pos]<StatisticalThreshold); % violation_ind_4roc>0 & Pviolation_ind_4roc<StatisticalThreshold
@@ -14,7 +15,7 @@ plotplacesetx = {1,2,3,4,5};
 plotplacesety = {1,1,1,1,1};
 
 title_for_plot = {'Novelty','Sensory surprise', 'Recency'};
-SDF_for_plot = { 'pred_nov_vs_fam_sdfs', 'pred_vs_unpred_fam_sdfs', 'recency_ind__match_pos_sdfs'};
+SDF_for_plot = { 'pred_nov_vs_fam_sdfs', 'pred_vs_unpred_fam_sdfs', 'recency_ind_match_pos_sdfs'};
 indices_in_struct = {'pred_nov_vs_fam', 'pred_vs_unpred_fam', 'recency_ind_match_pos'};
 Pvalues_in_struct = {'P_pred_nov_vs_fam', 'P_pred_vs_unpred_fam_perm', 'P_recency_ind_match_pos'};
 
@@ -24,21 +25,21 @@ for i = 1:numel(exampleneurons)
     sampleneuron = Neuronlist_all(Sampleneuron_set(id));
     
     clear(sampleneuron.name, 'Generaltask');
-    % load the raw neuron file
+    %load the raw neuron file
     try
         if strcmpi(sampleneuron.monkeyName, 'S')
             load(fullfile(raw_file_folder, 'Monkey_S_raw', sampleneuron.filename), sampleneuron.name, 'Generaltask');
         elseif strcmpi(sampleneuron.monkeyName, 'L')
             load(fullfile(raw_file_folder, 'Monkey_L_raw', sampleneuron.filename), sampleneuron.name, 'Generaltask');
         end
-        channelname = sampleneuron.name;
-    catch
-        error('Can not load raw spike data, raw file might be missing');
+    catch % use the local example file, if the full raw file is not available
+        load(fullfile(example_file_folder, sampleneuron.filename), sampleneuron.name, 'Generaltask');
     end
     
     baselinesubtraction = 'None';
     clear currentstruct;
     
+    channelname = sampleneuron.name;
     currentstruct.name = sampleneuron.name;
     currentstruct.filename = sampleneuron.filename;
     %%
@@ -143,7 +144,7 @@ for i = 1:numel(exampleneurons)
         currentstruct.recency_ind_match_pos = nan;
         currentstruct.P_recency_ind_match_pos = nan;
     end
-    currentstruct.recency_ind__match_pos_sdfs =[nanmean(Rasterscs_f_(recency_frac_sets.shortIFI_ind,Fractalsdfwindow));
+    currentstruct.recency_ind_match_pos_sdfs =[nanmean(Rasterscs_f_(recency_frac_sets.shortIFI_ind,Fractalsdfwindow));
         nanmean(Rasterscs_f_(recency_frac_sets.longIFI_ind,Fractalsdfwindow))];
     
     
@@ -284,6 +285,6 @@ for i = 1:numel(exampleneurons)
     ylim([0,1]);
     
     set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
-    print(gcf,'-dpdf', '-painters',fullfile(sample_neuron_outputfolder, ['sample neuoron' sampleneuron.name, sampleneuron.filename '.pdf']));
+    print(gcf,'-dpdf', '-painters',fullfile(example_neuron_outputfolder, ['sample neuoron' sampleneuron.name, sampleneuron.filename '.pdf']));
     
 end

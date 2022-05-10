@@ -1,46 +1,35 @@
 %%%% find a good Novelty and recency encoding neuron and plot its SDF
+example_neuron_outputfolder = fullfile(plotpath,'\sampleneurons');
+raw_file_folder = '.\raw_data';
+example_file_folder = '.\example_neuron_code\exampleneuron_raw_data';
 
-target_region = {'TE','Perirhinal cortex'};
+target_region = {'TE','Perirhinal cortex'}; %aka, AVMTC
 logical_multiday = cellfun(@(x) ~isempty(x.('FR7410')) | ~isempty(x.('FR7411')), {Neuronlist_all(:).learning})';
 logical_multiday = logical_multiday & cellfun(@(x) (numel(x.('learningdate'))==5 || numel(x.('learningdate'))==1 && x.('learningdate')>1), {Neuronlist_all(:).learning})';
 
 Sampleneuron_set = find([Neuronlist_all(:).pred_nov_vs_fam]>0 & [Neuronlist_all(:).P_pred_nov_vs_fam]<StatisticalThreshold...
     & cellfun(@(x) any(strcmpi(x, target_region)),{Neuronlist_all(:).region}) & logical_multiday');
 
-
-yaxislim = [-1,3];
 gauswindow_ms = 50;
 
-Monkey = 'S';
-if strcmpi('S', Monkey)
-    filepath = './raw_data/Monkey_S_raw';
-elseif strcmpi('L', Monkey)
-    filepath = '/raw_data/Monkey_L_raw';
-else
-    error('Wrong Monkey name');
-end
+exampleneurons = [21, 68, 288];
 
-for id = 1:numel(Sampleneuron_set)
-%id =4;
+for i = 1:numel(exampleneurons)
 
 % plot the bar plot of recency index and surprise index for one neuron
+id= exampleneurons(i);
 sampleneuron = Neuronlist_all(Sampleneuron_set(id));
 
-
-% error bars should be caluculated by bootstrapping.
-% load the raw neuron file
-if ~strcmpi(sampleneuron.monkeyName, Monkey)
-    continue;
+if strcmpi('S', sampleneuron.monkeyName)
+    filepath = fullfile(raw_file_folder, '/Monkey_S_raw');
+elseif strcmpi('L', sampleneuron.monkeyName)
+    filepath = fullfile(raw_file_folder, '/Monkey_L_raw');
 end
 
-% only plot specific neuron:
-if ~contains(sampleneuron.filename, {'09192018', '11212018', '04182019', '08192019'})
-    continue;
-end
 try
     load(fullfile(filepath, sampleneuron.filename), sampleneuron.name, 'Generaltask');
-catch
-    error('Can not load raw spike data, raw file might be missing');
+catch % use the local example file, if the full raw file is not available
+    load(fullfile(example_file_folder, sampleneuron.filename), sampleneuron.name, 'Generaltask');
 end
 
 zscorestd = sampleneuron.zscorestd;
@@ -109,7 +98,7 @@ axis off;
 % recalculate sampleneuron.learning use raw raster
 % trials 
 familiarfractype = [6300:6303];
-if strcmpi('S', Monkey)
+if strcmpi('S', sampleneuron.monkeyName)
     learningfractype = [7410,7411,7420,7421];%[7410:7415;7420:7425];
     learningfractype2 = [7412:7415, 7422:7425];
 else % Monkey L
@@ -318,7 +307,7 @@ ylim([1,5]);
 axis off;
 
 set(gcf,'Position',[1 41 2560 1484],'Paperposition',[0 0 26.6667 15.4583], 'Paperpositionmode','auto','Papersize',[26.6667 15.4583]);  % sets the size of the figuren and orientation
-print(gcf,'-dpdf', '-painters',fullfile(plotpath, '\sampleneurons', ['sampleneurons_learning_' sampleneuron.name, sampleneuron.filename '.pdf']));
+print(gcf,'-dpdf', '-painters',fullfile(example_neuron_outputfolder, ['sampleneurons_learning_' sampleneuron.name, sampleneuron.filename '.pdf']));
 
 end
 

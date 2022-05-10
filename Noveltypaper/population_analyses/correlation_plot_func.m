@@ -20,16 +20,15 @@ indices_for_plot = {'pred_vs_unpred_fam','recency_ind','violation_ind', 'pred_no
 flip_nov_sign = 1;
 
 %% A simplified version just for the figure plots.
-permutexy = {[4,1],[4,2],[4,3], [1,2]}; 
+permutexy = {[4,1],[4,2],[4,3]}; 
 plot_nrow = 3;
 plot_ncol= 5;
-plotplacesetx = {2,3,4,2,1};
-plotplacesety = {1,1,1,2,1};
+plotplacesetx = {2,3,4};
+plotplacesety = {1,1,1};
 
 
 Include_criterion = 'noveltyexcited';% 'noveltyinhibited', 'noveltyselective', 'All'
 
-%Include_neurons = find(Ppred_nov_vs_fam'<StatisticalThreshold & indices.pred_nov_vs_fam>0);
 if strcmpi(Include_criterion, 'noveltyexcited')
     Include_neurons = find(indices.Ppred_nov_vs_fam<StatisticalThreshold & indices.pred_nov_vs_fam>0); %1:length(pred_vs_unpred_fam);
 elseif strcmpi(Include_criterion, 'noveltyinhibited')
@@ -47,7 +46,7 @@ NotNoveltySelective_local = ismember(Include_neurons, NotNoveltySelective);
 NovelExcited_local = ismember(Include_neurons, NovelExcited);
 NovelInhibited_local = ismember(Include_neurons, NovelInhibited);
 
-for xyw = 1:length(permutexy) %%% x-axis recency ind, y-axis violation_ind
+for xyw = 1:length(permutexy) 
     
     xaxis_ind = indices.(indices_for_plot{permutexy{xyw}(1)});
     yaxis_ind = indices.(indices_for_plot{permutexy{xyw}(2)});

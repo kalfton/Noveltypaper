@@ -76,5 +76,7 @@ Key fields in the Generaltask:
 |'b_error_place' | Whether the sequence violation happened, and where it happened. 0 represents no sequence violation occurred, 2 represents that the sequence violation occurred in the second place, 3 represents that sequence violation occurred in the third place. |
 |'Fractals' | It is a 5 by m matrix, where m is the total number of fractal objects in the session. The first row is fractal ID. The second row is the trial type that the fractal is in, with the same convention as 'trialtype' field. The third row is the fractal position in the sequence. The fourth row is the fractal appearing time. The fifth row is the object disappearing time. |
 
-The raw data will be needed to regenerate some intermediate results, in that case, they should be put in the "Plot_all_session_code/raw_data/" directory.
+
+The raw data will be needed to regenerate some intermediate results, in that case, they should be put in the "raw_data" directory.
+
 

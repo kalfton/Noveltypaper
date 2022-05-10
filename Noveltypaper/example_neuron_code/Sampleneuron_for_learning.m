@@ -1,9 +1,9 @@
 %%%% find a good Novelty and recency encoding neuron and plot its SDF
 example_neuron_outputfolder = fullfile(plotpath,'\sampleneurons');
-raw_file_folder = '.\raw_data';
-example_file_folder = '.\example_neuron_code\exampleneuron_raw_data';
+raw_file_folder = fullfile('.','raw_data');
+example_file_folder = fullfile('.','example_neuron_code','exampleneuron_raw_data');
 
-target_region = {'TE','Perirhinal cortex'}; %aka, AVMTC
+target_region = {'AVMTC'};
 logical_multiday = cellfun(@(x) ~isempty(x.('FR7410')) | ~isempty(x.('FR7411')), {Neuronlist_all(:).learning})';
 logical_multiday = logical_multiday & cellfun(@(x) (numel(x.('learningdate'))==5 || numel(x.('learningdate'))==1 && x.('learningdate')>1), {Neuronlist_all(:).learning})';
 

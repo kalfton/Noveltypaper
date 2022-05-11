@@ -3,11 +3,11 @@ This is the repository for sharing the code for the paper: [*"Surprise and recen
 primate brain"*](https://www.cell.com/current-biology/pdfExtended/S0960-9822(22)00504-8) by Kaining Zhang, Ethan S. Bromberg-Martin, Fatih Sogukpinar, Kim Kocher and Ilya E. Monosov.
 
 
-To run the analyses and generate the figures in the paper, just run the MATLAB script "Mega_script.m".
-The output result plots are saved under the folder "plots".
+To run the analyses and generate the figures in the paper, just run the MATLAB script "Noveltypaper/Mega_script.m".
+The output result plots are saved under the folder "Noveltypaper/plots".
 
 
-To plot most of the analysis in the paper, the data in the "maindata" folder is enough. The two .mat files each contain a struct array (Neuronlist_\*) for each animal, and in the struct array, each item contains the precalculated results of one neuron.
+To plot most of the analysis in the paper, the data in the "Noveltypaper/maindata" folder is enough. The two .mat files each contain a struct array (Neuronlist_\*) for each animal, and in the struct array, each item contains the precalculated results of one neuron.
 
 Key fields in the Neuronlist: 
 
@@ -77,6 +77,6 @@ Key fields in the Generaltask:
 |'Fractals' | It is a 5 by m matrix, where m is the total number of fractal objects in the session. The first row is fractal ID. The second row is the trial type that the fractal is in, with the same convention as 'trialtype' field. The third row is the fractal position in the sequence. The fourth row is the fractal appearing time. The fifth row is the object disappearing time. |
 
 
-The raw data will be needed to regenerate some intermediate results, in that case, they should be put in the "raw_data" directory.
+The raw data will be needed to regenerate some intermediate results, in that case, they should be put in the "Noveltypaper/raw_data" directory.
 
 

@@ -52,7 +52,7 @@ Key fields in the Neuronlist:
 
 ## Raw data
 
-The raw neuronal spike data can be downloaded [here](https://wustl.box.com/s/v4x3zjvyopexyud3ghnk87apav9ma6ay) (Box) or [here](https://drive.google.com/file/d/1PyV4fiRH1lJdAQwzxfYjTkuhZj_qfZv2/view?usp=sharing) (Google Drive).
+The raw neuronal spike data can be downloaded [here](https://wustl.box.com/s/g5v6hok3oaqvhwlj5pfcat3xjv090t7u) (Box) or [here](https://drive.google.com/file/d/1PyV4fiRH1lJdAQwzxfYjTkuhZj_qfZv2/view?usp=sharing) (Google Drive).
 
 Each raw file (task_session_\*.mat) is a recording session, and it contains several struct variables, The struct variables whose names look like 'SPK*' contain the sorted neuron's information in each session. The information includes the neuron's spike time point in each trial (field name: sptimes) and each fractal object (field name: fracsptimes). 
 
